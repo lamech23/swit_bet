@@ -350,4 +350,24 @@ defmodule SwiftBet.Accounts do
       {:error, :user, changeset, _} -> {:error, changeset}
     end
   end
+
+  def list_users() do
+    query =
+      from w in User,
+      order_by: [asc: :inserted_at],
+      preload: [:roles]
+  
+    Repo.all(query)
+  end
+
+
+  def get_user!(id) do
+    Repo.get!(User, id)
+    |>  Repo.preload(:roles)
+  end
+
+  def delete(user) do
+    Repo.delete(user)
+  end
+  
 end

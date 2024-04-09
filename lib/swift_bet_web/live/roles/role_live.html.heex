@@ -1,10 +1,10 @@
 
-<%= if @live_action == :new do %>
-<div class="text-black">
+
+
+<div class="text-center text-teal-200 text-lg  ">
   <%= @page_title %>
 
 </div>
-<% end %>
 
 <.simple_form
 :let={f}
@@ -24,10 +24,25 @@ class="max-w-md mx-auto"
   />
 </div>
 
+<%= if @live_action == :new do %> 
+
 <button
   type="submit"
+  phx-disable-with="Creating..."
+
   class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
 >
-  Submit
+<%= @desc_title %>
 </button>
+
+<% else %> 
+<button
+  type="submit"
+  phx-disable-with="Updating..."
+
+  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+>
+<%= @desc_title %>
+</button>
+<% end %>
 </.simple_form>

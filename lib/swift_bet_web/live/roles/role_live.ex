@@ -2,14 +2,11 @@ defmodule SwiftBetWeb.Roles.RoleLive do
   use SwiftBetWeb, :live_view
   alias SwiftBet.Role.Roles
 
- 
   def mount(_params, _session, socket) do
-     IO.inspect(socket)
     changeset = Roles.change_role(%Roles{})
 
     roles = Roles.roles()
     socket = assign(socket, :form, to_form(changeset))
-
 
     {:ok, assign(socket, roles: roles)}
   end
@@ -24,8 +21,9 @@ defmodule SwiftBetWeb.Roles.RoleLive do
   end
 
   @impl true
-  defp create_role(socket, :new, role_params) do
+  defp create_role(socket, :new, %{"roles" => role_params}) do
     role_params |> IO.inspect(label: "ROLE PARAMS")
+
     case Roles.create(role_params) do
       {:ok, _role} ->
         socket =
@@ -43,9 +41,8 @@ defmodule SwiftBetWeb.Roles.RoleLive do
   @impl true
   defp create_role(socket, :edit, %{"roles" => role_params}) do
     roles = socket.assigns.role
-    |> IO.inspect()
 
-    case Roles.update( roles, role_params) do
+    case Roles.update(roles, role_params) do
       {:ok, _role} ->
         socket =
           socket
@@ -67,21 +64,19 @@ defmodule SwiftBetWeb.Roles.RoleLive do
     changeset = Roles.change_role(%Roles{})
 
     socket
-    |> assign(:page_title, "Create")
+    |> assign(:page_title, "Create New Role")
     |> assign(:role, %Roles{})
     |> assign(:changeset, changeset)
-    |> assign(:desc_title, "Create new Role")
+    |> assign(:desc_title, "Create ")
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    role =
-      Roles.get_role!(id) 
-      changeset = Roles.change_role(role)
-
+    role = Roles.get_role!(id)
+    changeset = Roles.change_role(role)
 
     socket
-    |> assign(:page_title, "Update Role ")
-    |> assign(:desc_title, "Upating Roles ")
+    |> assign(:page_title, "Update  ")
+    |> assign(:desc_title, "Update  Role ")
     |> assign(:role, role)
     |> assign(:changeset, changeset)
   end

@@ -73,7 +73,6 @@ defmodule SwiftBetWeb.Router do
   end
   scope "/root", SwiftBetWeb do
     pipe_through [:browser]
-
   live("/home",Home.HomeLive, :new)
   live("/add-game",Games.GameLive, :new)
   live("/list",Games.GameIndexLive, :index)
@@ -81,6 +80,8 @@ defmodule SwiftBetWeb.Router do
   live("/role/:id/edit",Roles.RoleLive, :edit)
   live("/roles/lists",Roles.RoleIndexLive, :index)
   live("/roles/create",Roles.RoleLive, :new)
+  live("/create-user",Admin.CreateAdminLive, :new)
+  live("/users",Admin.ListUsersLive, :index)
 end
 
   

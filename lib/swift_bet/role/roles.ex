@@ -3,10 +3,11 @@ defmodule SwiftBet.Role.Roles do
   import Ecto.Changeset
   alias SwiftBet.Repo
   import Ecto.Query
+  alias SwiftBet.Accounts
 
   schema "roles" do
     field :name, :string
-
+    belongs_to(:user, User)
     timestamps(type: :utc_datetime)
   end
 

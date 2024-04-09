@@ -57,6 +57,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
             time: game.time
           }
         end)
+        |> IO.inspect()
 
       socket =
         socket
@@ -82,7 +83,6 @@ defmodule SwiftBetWeb.Home.HomeLive do
 
     bets = 
       socket.assigns.bets 
-      |> IO.inspect()
 
     case add_slip(bets) do
       {:ok, _} ->
@@ -95,12 +95,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
     end
   end
   
-  defp get_slected_games(games)do
-    games
-  # |> IO.inspect()
-
-    
-  end
+  
   
 
   defp add_slip(bets) do
