@@ -1,0 +1,34 @@
+<div class="overflow-x-auto mt-20">
+         <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+           <thead class="ltr:text-left rtl:text-right">
+             <tr>
+               <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Role</th>
+               <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Action</th>
+  
+               <th class="px-4 py-2"></th>
+             </tr>
+           </thead>
+  
+           <%= for role <- @roles do %>
+             <tbody class="divide-y divide-gray-200">
+               <tr>
+                 <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900"><%= role.name %></td>
+  
+                 <td class="whitespace-nowrap px-4 py-2">
+                   <.link patch={~p"/root/role/#{role}/edit"}}>
+                     <span class="material-symbols-outlined text-teal-600 cursor-pointer">edit</span>
+                   </.link>
+                   <button
+                     type="button"
+                     class="material-symbols-outlined text-red-600 cursor-pointer"
+                     phx-click={JS.push("delete_role", value: %{"id" => role.id}) |> hide("{role.id}")}
+                     data-confirm="Are you sure you ?"
+                   >
+                     delete
+                   </button>
+                 </td>
+               </tr>
+             </tbody>
+           <% end %>
+         </table>
+       </div>

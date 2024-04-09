@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" class="[scrollbar-gutter:stable]">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="csrf-token" content={get_csrf_token()} />
+    <.live_title suffix=" · Phoenix Framework">
+      <%= assigns[:page_title] || "SwiftBet" %>
+    </.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+
+    </script>
+  </head>
+  <body class="bg-white antialiased">
+    <div class="flex items-center ">
+      <a href="/">
+        <img
+        src={~s"/images/logo.jpg"}
+        class="fill-current h-14 w-14 object-cover rounded-full mr-2" width="54" height="54" 
+         alt="">    
+        
+        </a>
+      <p class="bg-brand/5 text-brand rounded-full px-2 font-medium leading-6">
+        <div>
+       
+        <span class="font-semibold text-xl tracking-tight">BetSwift</span>
+      </div>
+       </p>
+    </div>
+    <ul class="  flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+      <%= if @current_user do %>
+        <li class="text-[0.8125rem] leading-6 text-zinc-900">
+          <%= @current_user.email %>
+        </li>
+        <li>
+          <.link
+            href={~p"/users/settings"}
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Settings
+          </.link>
+        </li>
+        <li>
+          <.link
+            href={~p"/users/log_out"}
+            method="delete"
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Log out
+          </.link>
+        </li>
+      <% else %>
+        <li>
+          <.link
+            href={~p"/users/register"}
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Register
+          </.link>
+        </li>
+        <li>
+          <.link
+            href={~p"/users/log_in"}
+            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          >
+            Log in
+          </.link>
+        </li>
+      <% end %>
+    </ul>
+
+    <.sidebar>
+      <.flash_group flash={@flash} />
+      <%= @inner_content %>
+  
+    </.sidebar>  </body>
+</html>

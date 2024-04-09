@@ -1,0 +1,50 @@
+
+
+<div class="overflow-x-auto">
+    <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
+      <thead class="ltr:text-left rtl:text-right">
+        <tr>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Teams</th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Home Odd</th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Draw Odd</th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Away Odd</th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Event Day </th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Time </th>
+          <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Actions  </th>
+          <th class="px-4 py-2"></th>
+        </tr>
+      </thead>
+      <%= for game <- @games do %>
+  
+      <tbody class="divide-y divide-gray-200">
+        <tr>
+          <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900"><%= game.teams %></td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><% game.home %></td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><%= game.draw %></td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><% game.away %></td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><%= game.day %></td>
+          <td class="whitespace-nowrap px-4 py-2 text-gray-700"><%= game.time %></td>
+          <td class="whitespace-nowrap px-4 py-2">
+            <a
+              href="#"
+              class="inline-block rounded bg-green-600 px-4 py-2 text-xs font-medium text-white hover:bg-green-700"
+            >
+              edit
+            </a>
+
+            <a
+            href="#"
+            class="inline-block rounded bg-red-600 px-4 py-2 text-xs font-medium text-white hover:bg-red-700"
+          >
+            Delete
+          </a>
+          </td>
+        </tr>
+  
+      
+  
+      </tbody>
+      <% end %>
+    </table>
+  </div>
+  
