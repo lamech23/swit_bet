@@ -23,7 +23,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
     if Enum.any?(socket.assigns.selected_items, &(&1.id == home_id)) do
       {:noreply, assign(socket, put_flash: %{error: "Item already selected"})}
     else
-      # Check if the :odds key is present in the selected item, if not, initialize it with an empty map
+      # Checking if the :odds key is present in the selected item, if not, initialize it with an empty map
       item = Map.update(item, :odds, [], & &1)
 
       # Add the odds to the selected item
@@ -57,7 +57,6 @@ defmodule SwiftBetWeb.Home.HomeLive do
             time: game.time
           }
         end)
-        |> IO.inspect()
 
       socket =
         socket
@@ -74,9 +73,9 @@ defmodule SwiftBetWeb.Home.HomeLive do
       socket.assigns.selected_items
       |> Enum.filter(fn item -> item.id != home_id end)
 
-    new_socket = assign(socket, selected_items: new_selected_items)
+    socket = assign(socket, selected_items: new_selected_items)
 
-    {:noreply, new_socket}
+    {:noreply, socket}
   end
 
   def handle_event("save_bets", _params, socket) do

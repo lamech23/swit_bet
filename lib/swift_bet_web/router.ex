@@ -82,6 +82,7 @@ defmodule SwiftBetWeb.Router do
   live("/roles/create",Roles.RoleLive, :new)
   live("/create-user",Admin.CreateAdminLive, :new)
   live("/users",Admin.ListUsersLive, :index)
+  live("/permisions",Permisions.PermisionsLive, :index)
 end
 
   
@@ -89,7 +90,7 @@ end
   scope "/", SwiftBetWeb do
     pipe_through [:browser]
 
-    delete "/users/log_out", UserSessionController, :delete
+    get "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,
       on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}] do

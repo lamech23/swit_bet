@@ -2,6 +2,8 @@ defmodule SwiftBetWeb.UserSettingsLive do
   use SwiftBetWeb, :live_view
 
   alias SwiftBet.Accounts
+  alias SwiftBet.Repo
+  alias SwiftBet.Accounts.User
 
   def render(assigns) do
     ~H"""
@@ -70,6 +72,15 @@ defmodule SwiftBetWeb.UserSettingsLive do
         </.simple_form>
       </div>
     </div>
+
+    <button
+      type="button"
+      class=" mt-20 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+      phx-click={JS.push("soft_delete", value: %{"email"=> @current_user.email})} 
+        data-confirm="Are you sure?"
+    >
+      Delete Account
+    </button>
     """
   end
 
@@ -164,4 +175,16 @@ defmodule SwiftBetWeb.UserSettingsLive do
         {:noreply, assign(socket, password_form: to_form(changeset))}
     end
   end
+
+  def handle_event("soft_delete", %{"email" => email}, socket) do
+    user = Repo.get_by(User, email: email)
+    Accounts.soft_delete(user, %{ status: "inActive"})
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Account succesfully Deactivated")
+     |> push_redirect(to: ~p"/users/log_out")}
+  end
+
+
 end

@@ -5,7 +5,7 @@ defmodule SwiftBet.Accounts do
 
   import Ecto.Query, warn: false
   alias SwiftBet.Repo
-
+  import Ecto.Changeset
   alias SwiftBet.Accounts.{User, UserToken, UserNotifier}
 
   ## Database getters
@@ -368,6 +368,12 @@ defmodule SwiftBet.Accounts do
 
   def delete(user) do
     Repo.delete(user)
+  end
+
+  def soft_delete(user, params) do
+    user
+    |> Ecto.Changeset.change(params)
+    |> Repo.update()
   end
   
 end
