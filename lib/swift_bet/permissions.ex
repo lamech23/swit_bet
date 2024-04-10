@@ -2,6 +2,7 @@ defmodule SwiftBet.Permissions do
   use Ecto.Schema
   import Ecto.Changeset
   import Ecto.Query
+  alias SwiftBet.Repo
 
   # @allowed_permissions ~w(create edit delete)
   schema "permissions" do
@@ -35,5 +36,9 @@ defmodule SwiftBet.Permissions do
     Repo.all(query)
   end
 
+  def change_permission(%__MODULE__{} = role, attrs\\ %{})do
+    changeset(role, attrs)
+
+  end
 
 end

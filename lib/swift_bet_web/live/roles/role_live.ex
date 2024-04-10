@@ -1,14 +1,15 @@
 defmodule SwiftBetWeb.Roles.RoleLive do
   use SwiftBetWeb, :live_view
   alias SwiftBet.Role.Roles
+  alias SwiftBet.Permissions
 
   def mount(_params, _session, socket) do
     changeset = Roles.change_role(%Roles{})
-
+    permission = Permissions.permissions()
     roles = Roles.roles()
     socket = assign(socket, :form, to_form(changeset))
 
-    {:ok, assign(socket, roles: roles)}
+    {:ok, assign(socket, roles: roles, permission: permission)}
   end
 
   def handle_params(params, _uri, socket) do
@@ -22,7 +23,8 @@ defmodule SwiftBetWeb.Roles.RoleLive do
 
   @impl true
   defp create_role(socket, :new, %{"roles" => role_params}) do
-    role_params |> IO.inspect(label: "ROLE PARAMS")
+
+    role_params |> IO.inspect()
 
     case Roles.create(role_params) do
       {:ok, _role} ->
@@ -81,15 +83,6 @@ defmodule SwiftBetWeb.Roles.RoleLive do
     |> assign(:changeset, changeset)
   end
 
-  def handle_event("delete_role", %{"id" => id}, socket) do
-    role = Roles.get_role!(id)
-    Roles.delete(role)
-
-    {:noreply,
-     socket
-     |> push_patch(to: "/root/roles")
-     |> put_flash(:info, "Post deleted successfully")}
-  end
 
   # validate 
   def handle_event("validate", role_params, socket) do

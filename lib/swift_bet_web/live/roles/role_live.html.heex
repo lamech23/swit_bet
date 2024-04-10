@@ -1,48 +1,46 @@
-
-
-
 <div class="text-center text-teal-200 text-lg  ">
   <%= @page_title %>
 
 </div>
 
-<.simple_form
-:let={f}
-for={@changeset }
-id="role_form"
-phx-submit="create_role"
+<.simple_form :let={f} for={@changeset } id="role_form" phx-submit="create_role" class="max-w-md mx-auto">
+  <div class="relative z-0 w-full mb-5 group">
+    <.input field={f[:name]} type="text" label="Role"
+      class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+      required />
 
-class="max-w-md mx-auto"
->
-<div class="relative z-0 w-full mb-5 group">
-  <.input
-    field={f[:name]}
-    type="text"
-    label="Role"
-    class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
-    required
-  />
-</div>
+    <div class="mb-6">
+      <label class="block text-gray-700 text-sm font-bold mt-8 ">
+        Permissions
+      </label>
+      <div class="grid grid-cols-2 gap-4">
+        <%= for permission <- @permission do %>
+          <div class="flex items-center">
+            <.input field={f[:permission]}
+             label={permission.name} 
+             type="checkbox" 
+             id="permissions"
+              value={permission.name} 
+               />
 
-<%= if @live_action == :new do %> 
+          </div>
+          <% end %>
 
-<button
-  type="submit"
-  phx-disable-with="Creating..."
+      </div>
+    </div>
+  </div>
 
-  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
->
-<%= @desc_title %>
-</button>
+  <%= if @live_action==:new do %>
 
-<% else %> 
-<button
-  type="submit"
-  phx-disable-with="Updating..."
+    <button type="submit" phx-disable-with="Creating..."
+      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+      <%= @desc_title %>
+    </button>
 
-  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
->
-<%= @desc_title %>
-</button>
-<% end %>
+    <% else %>
+      <button type="submit" phx-disable-with="Updating..."
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        <%= @desc_title %>
+      </button>
+      <% end %>
 </.simple_form>
