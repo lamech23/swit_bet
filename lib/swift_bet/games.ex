@@ -21,7 +21,7 @@ defmodule SwiftBet.Games do
   @doc false
   def changeset(games, attrs) do
     games
-    |> cast(attrs, [:teams, :home, :draw, :away, :time, :day])
+    |> cast(attrs, [:teams, :home, :draw, :away, :time, :day,  :user_id])
     |> validate_required([:teams, :home, :draw, :away, :time, :day])
   end
 

@@ -73,21 +73,22 @@ defmodule SwiftBetWeb.Router do
   end
   scope "/root", SwiftBetWeb do
     pipe_through [:browser]
-  live("/home",Home.HomeLive, :new)
-  live("/add-game",Games.GameLive, :new)
-  live("/list",Games.GameIndexLive, :index)
-  live("/roles",Roles.RoleLive, :new)
-  live("/role/:id/edit",Roles.RoleLive, :edit)
-  live("/roles/lists",Roles.RoleIndexLive, :index)
-  live("/roles/create",Roles.RoleLive, :new)
-  live("/create-user",Admin.CreateAdminLive, :new)
-  live("/users",Admin.ListUsersLive, :index)
-  live("/permisions",Permisions.PermisionsLive, :index)
+    
+  # live("/home",Home.HomeLive, :new)
+  # live("/add-game",Games.GameLive, :new)
+  # live("/list",Games.GameIndexLive, :index)
+  # live("/roles",Roles.RoleLive, :new)
+  # live("/role/:id/edit",Roles.RoleLive, :edit)
+  # live("/roles/lists",Roles.RoleIndexLive, :index)
+  # live("/roles/create",Roles.RoleLive, :new)
+  # live("/create-user",Admin.CreateAdminLive, :new)
+  # live("/users",Admin.ListUsersLive, :index)
+  # live("/permisions",Permisions.PermisionsLive, :index)
 end
 
   
 
-  scope "/", SwiftBetWeb do
+  scope "/root", SwiftBetWeb do
     pipe_through [:browser]
 
     get "/users/log_out", UserSessionController, :delete
@@ -96,6 +97,20 @@ end
       on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
+
+      live("/home",Home.HomeLive, :new)
+      live("/add-game",Games.GameLive, :new)
+      live("/list",Games.GameIndexLive, :index)
+      live("/roles",Roles.RoleLive, :new)
+      live("/role/:id/edit",Roles.RoleLive, :edit)
+      live("/roles/lists",Roles.RoleIndexLive, :index)
+      live("/roles/create",Roles.RoleLive, :new)
+      live("/create-user",Admin.CreateAdminLive, :new)
+      live("/users",Admin.ListUsersLive, :index)
+      live("/permisions",Permisions.PermisionsLive, :index)
+      live("/bet-slip",BetSlip.BettingSlipLive, :index)
+      live("/dashboard",Sidebar.SideNavLive, :index)
+
     end
   end
 end

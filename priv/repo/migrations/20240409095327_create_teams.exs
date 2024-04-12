@@ -8,8 +8,11 @@ defmodule SwiftBet.Repo.Migrations.CreateTeams do
       add :away, :string
       add :teams, :string
       add :day, :date
-      add :odds, {:array, :string}
+      add :stake, :string
+      add :odds, :string
+      add :status, :string, default: "open"
       add :time, :utc_datetime
+      add :user_id, references(:users)
 
       timestamps(type: :utc_datetime)
     end

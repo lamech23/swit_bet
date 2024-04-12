@@ -4,19 +4,20 @@ defmodule SwiftBet.Role.Roles do
   alias SwiftBet.Repo
   import Ecto.Query
   alias SwiftBet.Accounts
+  alias SwiftBet.Accounts.User
 
   schema "roles" do
     field :name, :string
     field :permission, {:array, :string}, default: []
-    belongs_to(:user, User)
+
     timestamps(type: :utc_datetime)
   end
 
   @doc false
   def changeset(roles, attrs) do
     roles
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :permission])
+    |> validate_required([:name, :permission])
 
   end
 

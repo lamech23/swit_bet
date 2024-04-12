@@ -58,8 +58,6 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
   end
 
   def handle_event("save", %{"user" => user_params}, socket) do
-    user_params
-|> IO.inspect()
     case Accounts.register_user(user_params) do
       {:ok, user} ->
         {:ok, _} =

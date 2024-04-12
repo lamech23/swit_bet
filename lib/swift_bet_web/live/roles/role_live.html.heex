@@ -3,7 +3,8 @@
 
 </div>
 
-<.simple_form :let={f} for={@changeset } id="role_form" phx-submit="create_role" class="max-w-md mx-auto">
+<.simple_form :let={f} for={@form} for={@changeset } id="role_form" phx-submit="create_role" 
+class="w-1/2 mx-auto  shadow-xl">
   <div class="relative z-0 w-full mb-5 group">
     <.input field={f[:name]} type="text" label="Role"
       class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -16,12 +17,16 @@
       <div class="grid grid-cols-2 gap-4">
         <%= for permission <- @permission do %>
           <div class="flex items-center">
-            <.input field={f[:permission]}
-             label={permission.name} 
-             type="checkbox" 
-             id="permissions"
-              value={permission.name} 
-               />
+        
+
+               <.input
+  field={f[:permission]}
+  type="checkgroup"
+  id="permisions"
+    multiple={true}
+  options={[{permission.name, permission.name}]}
+
+/>
 
           </div>
           <% end %>

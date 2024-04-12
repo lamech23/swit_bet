@@ -6,8 +6,7 @@ defmodule SwiftBet.Permissions do
 
   # @allowed_permissions ~w(create edit delete)
   schema "permissions" do
-
-    field :name,  :string
+    field :name, :string
 
     timestamps(type: :utc_datetime)
   end
@@ -19,26 +18,21 @@ defmodule SwiftBet.Permissions do
     |> validate_required([:name])
   end
 
-
-
-  def create(params)do
+  def create(params) do
     %__MODULE__{}
-    |>changeset(params)
+    |> changeset(params)
     |> Repo.insert()
+  end
 
-  end 
-
-
-  def permissions()do
+  def permissions() do
     query =
-    from p in __MODULE__,
-    order_by: [desc: :inserted_at]
+      from p in __MODULE__,
+        order_by: [desc: :inserted_at]
+
     Repo.all(query)
   end
 
-  def change_permission(%__MODULE__{} = role, attrs\\ %{})do
+  def change_permission(%__MODULE__{} = role, attrs \\ %{}) do
     changeset(role, attrs)
-
   end
-
 end

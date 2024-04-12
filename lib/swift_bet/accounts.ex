@@ -69,7 +69,7 @@ defmodule SwiftBet.Accounts do
 
       iex> register_user(%{field: value})
       {:ok, %User{}}
-
+list_users
       iex> register_user(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
@@ -355,7 +355,7 @@ defmodule SwiftBet.Accounts do
     query =
       from w in User,
       order_by: [asc: :inserted_at],
-      preload: [:roles]
+      preload: [:role]
   
     Repo.all(query)
   end

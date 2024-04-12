@@ -2,113 +2,114 @@
 
  
 <section class="flex flex-row flex-grow h-screen ">
-    <aside id="s" aria-label="Sidebar">
-       <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-          <ul class="space-y-2 font-medium">
-          
-          
-             <li>
-              
-               <.link                            
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-               navigate={~p"/dashboard"}
-               >
-               <svg aria-hidden="true" class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
-               <span class="ml-3">Dashboard</span>
-    
-                </.link>
-             </li>
-   
-          
+   <aside id="s" aria-label="Sidebar">
+      <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+         <ul class="space-y-2 font-medium">
+         
+         
+            <li>
              
-             <li>
-               <.link                            
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-               navigate={~p"/root/add-game"}
-               >
-               <span class="material-symbols-outlined text-blue-500"> add</span>
-               <span class="flex-1 ml-3 whitespace-nowrap">Add  Game</span>
-   
-               </.link>
-             </li>
-   
-             <li>
-               <.link                            
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-               navigate={~p"/root/list"}
-   
-               >
-               <span class="material-symbols-outlined text-blue-500"> sports_soccer</span>
-               <span class="flex-1 ml-3 whitespace-nowrap"> Games</span>
-   
-               </.link>
-             </li>
-
-             <li>
-               <.link                            
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-               navigate={~p"/root/roles"}
-               >
-               <span class="material-symbols-outlined text-blue-500"> person</span>
-               <span class="flex-1 ml-3 whitespace-nowrap">Roles</span>
-   
-               </.link>
-             </li>
-             <li>
               <.link                            
               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-              navigate={~p"/root/roles/lists"}
+              navigate={~p"/dashboard"}
               >
-              <span class="material-symbols-outlined text-blue-500"> person</span>
-              <span class="flex-1 ml-3 whitespace-nowrap">Manage Roles</span>
+              <svg aria-hidden="true" class="w-6 h-6 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"></path><path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"></path></svg>
+              <span class="ml-3">Dashboard</span>
+   
+               </.link>
+            </li>
+  
+         
+            
+            <li>
+              <.link                            
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              navigate={~p"/root/add-game"}
+              >
+              <span class="material-symbols-outlined text-blue-500"> add</span>
+              <span class="flex-1 ml-3 whitespace-nowrap">Add  Game</span>
+  
+              </.link>
+            </li>
+  
+            <li>
+              <.link                            
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              navigate={~p"/root/list"}
+  
+              >
+              <span class="material-symbols-outlined text-blue-500"> sports_soccer</span>
+              <span class="flex-1 ml-3 whitespace-nowrap"> Games</span>
   
               </.link>
             </li>
 
-             <li>
-               <.link                            
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-               navigate={~p"/root/permisions"}
-               >
-               <span class="material-symbols-outlined text-blue-500"> person</span>
-               <span class="flex-1 ml-3 whitespace-nowrap">Permisions</span>
-   
-               </.link>
-             </li>
+            <li>
+              <.link                            
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              navigate={~p"/root/roles"}
+              >
+              <span class="material-symbols-outlined text-blue-500"> person</span>
+              <span class="flex-1 ml-3 whitespace-nowrap">Roles</span>
+  
+              </.link>
+            </li>
+            <li>
+             <.link                            
+             class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+             navigate={~p"/root/roles/lists"}
+             >
+             <span class="material-symbols-outlined text-blue-500"> person</span>
+             <span class="flex-1 ml-3 whitespace-nowrap">Manage Roles</span>
+ 
+             </.link>
+           </li>
 
+            <li>
+              <.link                            
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              navigate={~p"/root/permisions"}
+              >
+              <span class="material-symbols-outlined text-blue-500"> person</span>
+              <span class="flex-1 ml-3 whitespace-nowrap">Permisions</span>
+  
+              </.link>
+            </li>
+
+            <li>
+              <.link                            
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              navigate={~p"/root/create-user"}
+              >
+              <span class="material-symbols-outlined text-blue-500"> person</span>
+              <span class="flex-1 ml-3 whitespace-nowrap">Add Users</span>
+  
+              </.link>
+            </li>
+  
+  
+  
              <li>
-               <.link                            
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-               navigate={~p"/root/create-user"}
-               >
-               <span class="material-symbols-outlined text-blue-500"> person</span>
-               <span class="flex-1 ml-3 whitespace-nowrap">Add Users</span>
+              <.link                            
+              class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+              navigate={~p"/root/users"}
+              >
+              <span class="material-symbols-outlined text-blue-500"> person</span>
+              <span class="flex-1 ml-3 whitespace-nowrap">users</span>
+  
+              </.link>
+            </li>
+  
+           
+         </ul>
+      </div>
+   </aside>
+ 
    
-               </.link>
-             </li>
-   
-   
-   
-              <li>
-               <.link                            
-               class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-               navigate={~p"/root/users"}
-               >
-               <span class="material-symbols-outlined text-blue-500"> person</span>
-               <span class="flex-1 ml-3 whitespace-nowrap">users</span>
-   
-               </.link>
-             </li>
-   
-            
-          </ul>
-       </div>
-    </aside>
-   
-    <main class=" flex-1   gap-20  min-h-full  bg-slate-50 px-0" >
-   
-    <%= render_slot(@inner_block) %>
-    </main>
+ 
+   <main class=" flex-1   gap-20  min-h-full  bg-slate-50 px-0" >
+  
+   <%= render_slot(@inner_block) %>
+   </main>
     
-   </section>
-    
+ </section>

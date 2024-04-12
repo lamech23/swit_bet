@@ -61,14 +61,22 @@
     
  
         
- 
           <div class="flex flex-row justify-between mt-4 border-t-2 ">
             <span class=" text-2xl capitalize">total odds  : </span>
             <span class="text-2xl"><%= Float.round(@total_odds, 2) %></span>
           </div>
           <div class="flex flex-row justify-between mt-4 ">
             <span class=" text-2xl capitalize">Amounts :</span>
-            <input type="text" class="w-20 h-9 rounded-lg  text-black outline-none focus:ring">
+            <.simple_form
+            :let={f}
+            for={@form}
+            phx-change="stake"
+            
+            >
+            <.input field={f[:stake]} type="text" label="Stake"  />
+
+
+          </.simple_form>
           </div>
  
  
@@ -79,7 +87,7 @@
  
           <div class="flex flex-row justify-between ">
             <span class=" text-2xl capitalize">posible payouts :</span>
-            <span class="text-2xl"><%= Float.round(@total_odds * 100,  2) %></span>
+            <span class="text-2xl"><%= Float.round(@total_odds * String.to_integer(@stake), 2) %></span>
 
     </div>
 

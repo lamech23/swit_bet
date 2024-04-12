@@ -2,6 +2,7 @@ defmodule SwiftBet.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
   alias  SwiftBet.Role.Roles
+  alias  SwiftBet.Bets
 
   schema "users" do
     field :email, :string
@@ -11,9 +12,10 @@ defmodule SwiftBet.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    field :role_id, :integer
+    # field :role_id, :integer
     field :status, :string
-    has_many(:roles, Roles)
+    belongs_to(:role, Roles)
+    has_many(:bets, Bets)
 
     timestamps(type: :utc_datetime)
   end

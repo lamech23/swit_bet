@@ -5,12 +5,17 @@ defmodule SwiftBetWeb.Home.HomeLive do
   alias SwiftBet.Repo
 
   def mount(_params, _session, socket) do
+    changeset = Games.change_games(%Games{})
+
+    socket = assign(socket, :form, to_form(changeset))
+
     all_games = Games.list_games()
     selected_items = []
     total_odds = 0.0
+    stake = Map.get(socket.assigns, :stake, 100) |> Integer.to_string() |> IO.inspect()
 
     {:ok,
-     assign(socket, games: all_games, selected_items: selected_items, total_odds: total_odds)}
+     assign(socket, games: all_games, selected_items: selected_items, total_odds: total_odds, stake: stake)}
   end
 
   def handle_event("place_slip", %{"home" => home_id, "odd" => odd}, socket) do
@@ -27,7 +32,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
       item = Map.update(item, :odds, [], & &1)
 
       # Add the odds to the selected item
-      item_with_odds = %{item | odds: [odd | item.odds]}
+      item_with_odds = %{item | odds: Enum.join([odd | item.odds], ",")}
 
       # Retrieve the list of selected items from the socket assigns or initialize it if it doesn't exist
 
@@ -45,6 +50,12 @@ defmodule SwiftBetWeb.Home.HomeLive do
           [first | rest] -> Enum.reduce(rest, first, &(&1 + &2))
         end
 
+
+
+        stakes = Map.get(socket.assigns, :stake, 0) 
+        %{current_user: user} =socket.assigns
+
+
       selected_fields =
         Enum.map(new_selected_items, fn game ->
           %{
@@ -54,13 +65,23 @@ defmodule SwiftBetWeb.Home.HomeLive do
             home: game.home,
             odds: game.odds,
             teams: game.teams,
-            time: game.time
+            time: game.time,
+            user_id: user.id
           }
+        end) 
+
+
+        selected_fields_with_stake =
+        Enum.map(selected_fields, fn(field) ->
+          stake = Map.get(field, :stake, stakes)
+          user_id = Map.get(field, :user_id, user.id)
+          Map.put(field, :stake, stake)
         end)
+      
 
       socket =
         socket
-        |> assign(selected_items: new_selected_items, total_odds: odds_list, bets:  selected_fields)
+        |> assign(selected_items: new_selected_items, total_odds: odds_list, bets:  selected_fields_with_stake)
 
       {:noreply, socket}
     end
@@ -84,10 +105,14 @@ defmodule SwiftBetWeb.Home.HomeLive do
       socket.assigns.bets 
 
     case add_slip(bets) do
-      {:ok, _} ->
+      {:ok, _bets} ->
+        socket =
         socket
         |> put_flash(:info, "Bet placed")
-        |> push_event("refresh_selected_items", %{})
+        # |> push_event("refresh_selected_items", %{})
+
+        {:noreply, socket}
+
   
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -100,9 +125,23 @@ defmodule SwiftBetWeb.Home.HomeLive do
   defp add_slip(bets) do
     bets
    |>  Enum.each( fn bet_params ->
-      %SwiftBet.Bets{}
-      |> SwiftBet.Games.changeset(bet_params)
+      %Bets{}
+      |> Bets.change_bets(bet_params)
+
       |> Repo.insert()
+      |>IO.inspect
     end)
+    {:ok, bets }
+  end
+
+  def handle_event("stake", %{"stake"=> stake}, socket) do
+    added_stake =
+    stake 
+    |>Integer.to_string()
+
+
+
+    {:noreply, assign(socket, stake: added_stake)}
+    
   end
 end

@@ -201,7 +201,7 @@ defmodule SwiftBetWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-8 bg-white">
+      <div class="mt-10 space-y-8 bg-white p-4 rounded-lg">
         <%= render_slot(@inner_block, f) %>
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           <%= render_slot(action, f) %>
@@ -270,7 +270,7 @@ defmodule SwiftBetWeb.CoreComponents do
   attr :name, :any
   attr :label, :string, default: nil
   attr :value, :any
-
+  attr :required, :boolean, default: false
   attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file hidden month number password
@@ -321,6 +321,35 @@ defmodule SwiftBetWeb.CoreComponents do
         />
         <%= @label %>
       </label>
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    """
+  end
+
+  def input(%{type: "checkgroup"} = assigns) do
+    ~H"""
+    <div phx-feedback-for={@name} class="text-sm">
+      <.label for={@id} required={@required}><%= @label %></.label>
+      <div class=" w-full bg-white mt-10 text-teal-500">
+        <div class="grid grid-cols-1 gap-1 text-sm items-baseline">
+          <input type="hidden" name={@name} value="" />
+          <div class="..." :for={{label, value} <- @options}>
+            <label
+              for={"#{@name}-#{value}"} class="...">
+              <input
+                type="checkbox"
+                id={"#{@name}-#{value}"}
+                name={@name}
+                value={value}
+                checked={value in @value}
+                class="mr-2 h-4 w-4 rounded ..."
+                {@rest}
+              />
+              <%= label %>
+            </label>
+          </div>
+        </div>
+      </div>
       <.error :for={msg <- @errors}><%= msg %></.error>
     </div>
     """

@@ -24,9 +24,15 @@ defmodule SwiftBetWeb.Roles.RoleLive do
   @impl true
   defp create_role(socket, :new, %{"roles" => role_params}) do
 
-    role_params |> IO.inspect()
+    %{current_user: user} =socket.assigns
+    role_params_with_user_id =
+    role_params
+    |> Map.put("user_id", user.id)
 
-    case Roles.create(role_params) do
+  role_params_with_user_id =
+    Map.merge(role_params, %{"user_id" => role_params_with_user_id["user_id"]})
+
+    case Roles.create(role_params_with_user_id) do
       {:ok, _role} ->
         socket =
           socket

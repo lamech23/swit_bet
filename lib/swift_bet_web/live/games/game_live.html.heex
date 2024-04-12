@@ -1,6 +1,6 @@
 <.simple_form 
 
-class="grid grid-flow-row auto-rows-max mt-10     "
+class="grid grid-flow-row auto-rows-max mt-10 shadow-2xl     "
 :let={f}
 for={@form}
 id="games_foem"
@@ -8,18 +8,34 @@ phx-submit="save_game"
 
 >
     <div class="text-center text-3xl uppercase text-teal-400 ">add bet </div>
+    <div class="grid grid-cols-8  gap-4">
 
-
-    <.input field={f[:teams]} type="text" label="Teams " />
-
-    <.input field={f[:home]} type="text" label="Home Odd" />
-
-
-    <.input field={f[:draw]} type="text" label="Draw Odd" />
-
-    <.input field={f[:away]} type="text" label="Away Odd " />
-    <.input field={f[:day]} type="date" label="Match Day " />
-    <.input field={f[:time]} type="datetime-local" label="Match time  " />
+        <div class="col-span-4">
+          <.input field={f[:teams]} type="text" label="Teams" class="input-field" />
+        </div>
+      
+        <div class="col-span-4">
+          <.input field={f[:home]} type="text" label="Home Odd" class="input-field" />
+        </div>
+      
+        <div class="col-span-4">
+          <.input field={f[:draw]} type="text" label="Draw Odd" class="input-field" />
+        </div>
+      
+        <div class="col-span-4">
+          <.input field={f[:away]} type="text" label="Away Odd" class="input-field" />
+        </div>
+      
+        <div class="col-span-4">
+          <.input field={f[:day]} type="date" label="Match Day" class="input-field" />
+        </div>
+      
+        <div class="col-span-4">
+          <.input field={f[:time]} type="datetime-local" label="Match Time" class="input-field" />
+        </div>
+      
+      </div>
+      
 
 
     <.button phx-disable-with="submiting....."> submit</.button>

@@ -31,27 +31,61 @@
        </p>
     </div>
     <ul class="  flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+
+
       <%= if @current_user do %>
-        <li class="text-[0.8125rem] leading-6 text-zinc-900">
-          <%= @current_user.email %>
-        </li>
-        <li>
+      
+      <li x-data="{ open: false }" @click.away="open = false" class="relative">
+        <button @click="open = !open" class="text-[0.8125rem] leading-6 text-zinc-900 focus:outline-none">
+          <img src= 
+          "https://media.geeksforgeeks.org/wp-content/uploads/20240226132217/w2.png" 
+                           alt=""
+                           class=" w-14 h-14   -mt-16  
+                                  block rounded-full border-4 border-white  
+                                  transition-transform duration-400  
+                                  transform hover:scale-110" /> 
+        </button>
+        
+        <ul x-show="open" class="absolute right-0 mt-1 w-36 bg-white rounded-md shadow-lg z-10">
+
+          <li 
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+
+            <%= @current_user.email %>
+
+          </li>
+          <li>
+            <.link
+              href={~p"/users/settings"}
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              Settings
+            </.link>
+          </li>
+          <li>
+            <.link
+              href={~p"/users/log_out"}
+              method="delete"
+              class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+              Log out
+            </.link>
+          </li>
+
+          <li>
+
+        
           <.link
-            href={~p"/users/settings"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+          href={~p"/root/bet-slip"}
+          class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
-            Settings
-          </.link>
-        </li>
-        <li>
-          <.link
-            href={~p"/users/log_out"}
-            method="delete"
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-          >
-            Log out
-          </.link>
-        </li>
+          Bet-slip
+        </.link>
+      </li>
+      
+
+        </ul>
+      </li>
+    
+     
       <% else %>
         <li>
           <.link
