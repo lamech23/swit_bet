@@ -1,8 +1,8 @@
 defmodule SwiftBet.Bets do
   use Ecto.Schema
   import Ecto.Changeset
-  alias SwiftBet.Repo
   import Ecto.Query
+  alias SwiftBet.Repo
 
   alias SwiftBet.Accounts.User
 
@@ -15,6 +15,7 @@ defmodule SwiftBet.Bets do
     field :teams, :string
     field :stake, :string
     field :odds, :string
+    field :slip_id, :integer
     field :status, :string, default: "open"
     field :time, :utc_datetime
     belongs_to(:user, SwiftBet.Users.User)
@@ -24,15 +25,15 @@ defmodule SwiftBet.Bets do
   @doc false
   def changeset(bets, attrs) do
     bets
-    |> cast(attrs, [:teams, :home, :draw, :away, :day, :odds, :time, :stake, :user_id, :status])
+    |> cast(attrs, [:teams, :home, :draw, :away, :day, :odds, :time, :stake, :user_id, :status, :slip_id])
     |> validate_required([:teams, :home, :draw, :away, :day, :odds, :time])
   end
 
 
 
-  def get_user_bets(user_id) do
+  def get_user_bets(slip_id) do
     from(record in __MODULE__,
-    where: record.user_id == ^user_id,
+    where: record.slip_id == ^slip_id,
     select: record
   )
   |> Repo.all()
@@ -51,6 +52,12 @@ defmodule SwiftBet.Bets do
       |>change(%{status: "cancelled"})
       |> Repo.update()
     end)
+  end
+
+  def update_slip_id(bet, slip_id) do
+    bet
+    |> changeset(%{slip_id: slip_id})
+    |> Repo.update()
   end
   
 end

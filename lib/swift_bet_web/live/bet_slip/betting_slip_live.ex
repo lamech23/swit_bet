@@ -3,51 +3,49 @@ defmodule SwiftBetWeb.BetSlip.BettingSlipLive do
   alias SwiftBet.Bets
   alias SwiftBet.Accounts.User
   alias SwiftBet.Repo
+  alias SwiftBet.Placed
 
   def render(assigns) do
     ~H"""
-    <div class="bg-gray-100 rounded-lg shadow-md p-6">
-      <h2 class="text-lg font-semibold mb-4">Bet Slip - SwiftBet</h2>
-      <div class="grid grid-cols-2 gap-4">
-        <%= for bet <- @bets do %>
-          <div>
-            <p class="text-sm text-gray-600">Home</p>
-            <p class="font-semibold"><%= bet.teams %></p>
-            <p class="text-lg text-gray-500"><%= bet.odds %></p>
-            <p class="text-lg text-gray-500"><%= bet.status %></p>
-          </div>
-        <% end %>
-      </div>
-      <div class="mt-4">
-        <button
-          class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          phx-click={JS.push("bet_cancel", value: %{"bets" => @bet_ids})}
-          data-confirm="Are you sure?"
+    <section>
+      <%= for {slip, index} <- Enum.with_index(@slips) do %>
+        <.link
+          navigate={~p"/root/bet-history/#{slip.id}"}
+          phx-click="slip_id"
+          phx-value-id={slip.id}
+          class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
         >
-          cancel
-        </button>
-      </div>
-    </div>
+          <%= "Bet Slip #{index + 1}" %>
+        </.link>
+      <% end %>
+    </section>
+    
     """
   end
 
   def mount(_session, _params, socket) do
     %{current_user: user} = socket.assigns
-    user |> IO.inspect
 
     bets = Bets.get_user_bets(user.id)
 
     bet_ids = bets |> Enum.map(& &1.id)
 
-    {:ok, assign(socket, bets: bets, bet_ids: bet_ids)}
+    slips = Placed.get_slips()
+
+    {:ok, assign(socket, bets: bets, bet_ids: bet_ids, slips: slips)}
   end
 
-  def handle_event("bet_cancel", %{"bets" => bets}, socket) do
-    bets
-    |> Bets.cancel_bet()
+
+  def handle_event("slip_id", %{"id" => id}, socket) do
+    bet_slips =
+      id
+      |> String.to_integer()
+      |> Bets.get_user_bets()
 
     {:noreply,
-     socket
-     |> put_flash(:info, "Bet canceld ")}
+    socket 
+    |> redirect(to: "/root/root/bet-history/#{id}")
+   }
+    
   end
 end

@@ -3,6 +3,8 @@ defmodule SwiftBetWeb.Home.HomeLive do
   alias SwiftBet.Games
   alias SwiftBet.Bets
   alias SwiftBet.Repo
+  alias SwiftBet.Placed
+  alias SwiftBet.Accounts
 
   def mount(_params, _session, socket) do
     changeset = Games.change_games(%Games{})
@@ -15,7 +17,12 @@ defmodule SwiftBetWeb.Home.HomeLive do
     stake = Map.get(socket.assigns, :stake, 100) |> Integer.to_string() |> IO.inspect()
 
     {:ok,
-     assign(socket, games: all_games, selected_items: selected_items, total_odds: total_odds, stake: stake)}
+     assign(socket,
+       games: all_games,
+       selected_items: selected_items,
+       total_odds: total_odds,
+       stake: stake
+     )}
   end
 
   def handle_event("place_slip", %{"home" => home_id, "odd" => odd}, socket) do
@@ -50,11 +57,8 @@ defmodule SwiftBetWeb.Home.HomeLive do
           [first | rest] -> Enum.reduce(rest, first, &(&1 + &2))
         end
 
-
-
-        stakes = Map.get(socket.assigns, :stake, 0) 
-        %{current_user: user} =socket.assigns
-
+      stakes = Map.get(socket.assigns, :stake, 0)
+      %{current_user: user} = socket.assigns
 
       selected_fields =
         Enum.map(new_selected_items, fn game ->
@@ -68,20 +72,22 @@ defmodule SwiftBetWeb.Home.HomeLive do
             time: game.time,
             user_id: user.id
           }
-        end) 
+        end)
 
-
-        selected_fields_with_stake =
-        Enum.map(selected_fields, fn(field) ->
+      selected_fields_with_stake =
+        Enum.map(selected_fields, fn field ->
           stake = Map.get(field, :stake, stakes)
           user_id = Map.get(field, :user_id, user.id)
           Map.put(field, :stake, stake)
         end)
-      
 
       socket =
         socket
-        |> assign(selected_items: new_selected_items, total_odds: odds_list, bets:  selected_fields_with_stake)
+        |> assign(
+          selected_items: new_selected_items,
+          total_odds: odds_list,
+          bets: selected_fields_with_stake
+        )
 
       {:noreply, socket}
     end
@@ -100,48 +106,48 @@ defmodule SwiftBetWeb.Home.HomeLive do
   end
 
   def handle_event("save_bets", _params, socket) do
-
-    bets = 
-      socket.assigns.bets 
+    bets = socket.assigns.bets
 
     case add_slip(bets) do
-      {:ok, _bets} ->
+      bets when is_list(bets) ->
+        user_id = Enum.at(bets, 0).user_id
+
+        case Placed.create(%{user_id: user_id}) do
+          {:ok, slip_id} ->
+            Enum.map(bets, fn bet ->
+              bet
+              |> Bets.update_slip_id(slip_id.id)
+            end)
+        end
+
         socket =
-        socket
-        |> put_flash(:info, "Bet placed")
-        # |> push_event("refresh_selected_items", %{})
+          socket
+          |> put_flash(:info, "Bets placed")
 
         {:noreply, socket}
 
-  
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+      {:error, reason} ->
+        socket =
+          socket
+          |> put_flash(:error, "Failed to place bets: #{reason}")
+
+        {:noreply, socket}
     end
   end
-  
-  
-  
 
   defp add_slip(bets) do
     bets
-   |>  Enum.each( fn bet_params ->
+    |> Enum.map(fn bet_params ->
       %Bets{}
       |> Bets.change_bets(bet_params)
-
-      |> Repo.insert()
-      |>IO.inspect
+      |> Repo.insert!()
     end)
-    {:ok, bets }
   end
 
-  def handle_event("stake", %{"stake"=> stake}, socket) do
+  def handle_event("stake", %{"stake" => stake}, socket) do
     added_stake =
-    stake 
-    |>Integer.to_string()
-
-
+      stake
 
     {:noreply, assign(socket, stake: added_stake)}
-    
   end
 end

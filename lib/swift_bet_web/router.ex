@@ -110,6 +110,7 @@ end
       live("/permisions",Permisions.PermisionsLive, :index)
       live("/bet-slip",BetSlip.BettingSlipLive, :index)
       live("/dashboard",Sidebar.SideNavLive, :index)
+      live("/bet-history/:id",BetSlip.BetHistoryLive, :index)
 
     end
   end
