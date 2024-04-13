@@ -17,6 +17,8 @@ defmodule SwiftBet.Bets do
     field :odds, :string
     field :slip_id, :integer
     field :status, :string, default: "open"
+    field :total_payout, :string
+    field :selected, :string
     field :time, :utc_datetime
     belongs_to(:user, SwiftBet.Users.User)
     timestamps(type: :utc_datetime)
@@ -25,7 +27,7 @@ defmodule SwiftBet.Bets do
   @doc false
   def changeset(bets, attrs) do
     bets
-    |> cast(attrs, [:teams, :home, :draw, :away, :day, :odds, :time, :stake, :user_id, :status, :slip_id])
+    |> cast(attrs, [:teams, :home, :draw, :away, :day, :odds, :time, :stake, :user_id, :status, :slip_id, :total_payout, :selected])
     |> validate_required([:teams, :home, :draw, :away, :day, :odds, :time])
   end
 

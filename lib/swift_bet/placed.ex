@@ -28,11 +28,14 @@ defmodule SwiftBet.Placed do
   end
 
 
-  def get_slips() do
-    __MODULE__
-    |> order_by(desc: :inserted_at)
+  def get_slips(user_id) do
+    query = from(p in __MODULE__, 
+    where: p.user_id == ^user_id,
+    select: p
+    
+    )
     |> Repo.all()
-    |> Repo.preload(:user)
+    |> Repo.preload(:bet)
   end
   
 

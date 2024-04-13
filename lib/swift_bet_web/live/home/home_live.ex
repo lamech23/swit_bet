@@ -8,11 +8,11 @@ defmodule SwiftBetWeb.Home.HomeLive do
 
   def mount(_params, _session, socket) do
     changeset = Games.change_games(%Games{})
-
     socket = assign(socket, :form, to_form(changeset))
 
+
     all_games = Games.list_games()
-    selected_items = []
+    selected_items = [] 
     total_odds = 0.0
     stake = Map.get(socket.assigns, :stake, 100) |> Integer.to_string() |> IO.inspect()
 
@@ -25,15 +25,24 @@ defmodule SwiftBetWeb.Home.HomeLive do
      )}
   end
 
-  def handle_event("place_slip", %{"home" => home_id, "odd" => odd}, socket) do
+  def handle_event("place_slip", %{"home" => home_id, "odd" => odd, "selection" => selection}, socket) do
     home_id = String.to_integer(home_id)
     odds = String.to_float(odd)
 
-    item = socket.assigns.games |> Enum.find(&(&1.id == home_id))
+    item = socket.assigns.games |> Enum.find(&(&1.id == home_id)) 
+
+
     game_odds = socket.assigns.games |> Enum.find(&(&1.id == odds))
 
     if Enum.any?(socket.assigns.selected_items, &(&1.id == home_id)) do
-      {:noreply, assign(socket, put_flash: %{error: "Item already selected"})}
+      {:noreply, 
+      socket = 
+      socket 
+      |> put_flash(:error,  "odd  already selected")
+
+    }
+    {:noreply, socket}
+
     else
       # Checking if the :odds key is present in the selected item, if not, initialize it with an empty map
       item = Map.update(item, :odds, [], & &1)
@@ -45,8 +54,11 @@ defmodule SwiftBetWeb.Home.HomeLive do
 
       selected_items = Map.get(socket.assigns, :selected_items)
 
+
       # Append the selected item with odds to the list of selected items
       new_selected_items = [item_with_odds | selected_items]
+
+
 
       odds_list =
         Enum.map(new_selected_items, & &1.odds)
@@ -70,16 +82,22 @@ defmodule SwiftBetWeb.Home.HomeLive do
             odds: game.odds,
             teams: game.teams,
             time: game.time,
-            user_id: user.id
+            user_id: user.id,
+            selected:  selection,
           }
         end)
+        
 
       selected_fields_with_stake =
         Enum.map(selected_fields, fn field ->
           stake = Map.get(field, :stake, stakes)
           user_id = Map.get(field, :user_id, user.id)
           Map.put(field, :stake, stake)
+          Map.put(field, :selection, stake)
+          Map.put(field, :total_payout, Float.to_string(Float.round(odds_list * String.to_integer(stake), 2)))
+
         end)
+
 
       socket =
         socket
@@ -111,14 +129,15 @@ defmodule SwiftBetWeb.Home.HomeLive do
     case add_slip(bets) do
       bets when is_list(bets) ->
         user_id = Enum.at(bets, 0).user_id
-
-        case Placed.create(%{user_id: user_id}) do
+        Enum.each(bets, fn bet ->
+        case Placed.create(%{user_id: user_id, bet_id: bet.id}) do
           {:ok, slip_id} ->
             Enum.map(bets, fn bet ->
               bet
               |> Bets.update_slip_id(slip_id.id)
             end)
         end
+      end)
 
         socket =
           socket
