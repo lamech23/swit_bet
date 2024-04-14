@@ -61,7 +61,7 @@
           <span class="text-lg font-medium uppercase"><%= item.teams %></span>
         </div>
         <div class="flex items-center gap-4">
-          <span class="text-lg font-medium">Your pick: Home</span>
+          <span class="text-lg font-medium">Your pick: <%= item.selected %></span>
           <span class="text-lg font-medium">Odd: <%= item.odds %></span>
           <span class=" material-symbols-outlined text-red-500 cursor-pointer material-icons" phx-click="remove_slip" phx-value-home_id={item.id}>close</span>
         </div>
@@ -77,7 +77,11 @@
       </div>
       <div class="flex flex-col">
         <label for="stake" class="text-lg font-semibold">Stake:</label>
-        <input type="text" id="stake" class="border px-3 py-2 rounded-md" placeholder="Enter stake" phx-change="stake" />
+        <input 
+        type="text" 
+        id="stake"
+         class="border px-3 py-2 rounded-md"
+          placeholder="Enter stake" phx-change="stake" />
       </div>
     </div>
   

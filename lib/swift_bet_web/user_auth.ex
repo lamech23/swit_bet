@@ -224,4 +224,5 @@ defmodule SwiftBetWeb.UserAuth do
   defp maybe_store_return_to(conn), do: conn
 
   defp signed_in_path(_conn), do: ~p"/root/home"
+  defp admin_path(_conn), do: ~p"/root/"
 end
