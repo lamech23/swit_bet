@@ -37,6 +37,19 @@ defmodule SwiftBet.Placed do
     |> Repo.all()
     |> Repo.preload(:bet)
   end
+
+
+
+  def all_slips(user_id) do
+    query = from(p in __MODULE__, 
+    where: p.user_id == ^user_id,
+    select: p
+    
+    )
+    |> Repo.all()
+    |> Repo.preload(:bet)
+  end
+  
   
 
   

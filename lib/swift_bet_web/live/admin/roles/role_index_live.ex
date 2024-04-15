@@ -1,6 +1,8 @@
 defmodule SwiftBetWeb.Roles.RoleIndexLive do
     use SwiftBetWeb, :live_view
     alias SwiftBet.Role.Roles
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
+
     def mount(_params, _session, socket)do
         roles = Roles.roles()
 

@@ -10,10 +10,21 @@ defmodule SwiftBetWeb.Home.HomeLive do
     changeset = Games.change_games(%Games{})
     socket = assign(socket, :form, to_form(changeset))
 
-    all_games = Games.list_games()
+    all_games = Games.list_games()    
+    |> Enum.map(fn item -> 
+      case  Timex.format(item.time, "{Mshort} {0M} {YYYY} {D} at {h12}:{m}") do
+        {:ok, time} ->
+          Map.put(item, :relative_time, time)
+          |> IO.inspect()
+      end
+      
+    end)
+    
+
+    
     selected_items = []
     total_odds = 0.0
-    stake = Map.get(socket.assigns, :stake, 100) |> Integer.to_string() |> IO.inspect()
+    stake = Map.get(socket.assigns, :stake, 100) |> Integer.to_string()
 
     {:ok,
      assign(socket,
@@ -49,18 +60,19 @@ defmodule SwiftBetWeb.Home.HomeLive do
 
       # Add the odds to the selected item
       item_with_odds = %{item | odds: Enum.join([odd | item.odds], ",")}
+      |> Map.put(:selected, selection)
+
+
 
       # Retrieve the list of selected items from the socket assigns or initialize it if it doesn't exist
 
       selected_items = Map.get(socket.assigns, :selected_items)
 
       # Append the selected item with odds to the list of selected items
-      new_selected_items = [item_with_odds | selected_items]
-      |> Enum.map(fn item -> 
-        item
-        |> Map.put(:selected, selection)
-        |> IO.inspect
-      end)
+      new_selected_items =
+        [item_with_odds | selected_items]
+      |> IO.inspect(label: "new_selected_items")
+       
 
       odds_list =
         Enum.map(new_selected_items, & &1.odds)
@@ -88,7 +100,6 @@ defmodule SwiftBetWeb.Home.HomeLive do
             selected: selection
           }
         end)
-       
 
       selected_fields_with_stake =
         Enum.map(selected_fields, fn field ->
@@ -134,7 +145,13 @@ defmodule SwiftBetWeb.Home.HomeLive do
   end
 
   def handle_event("save_bets", _params, socket) do
-    bets = socket.assigns.bets
+    bets =
+      socket.assigns.bets
+      |> Enum.map(fn item ->
+        item 
+        |> Map.put(:status, Enum.random(["won", "lose"]))
+      
+      end)
 
     case add_slip(bets) do
       bets when is_list(bets) ->
@@ -175,7 +192,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
   end
 
   def handle_event("stake", %{"stake" => stake}, socket) do
-    added_stake = stake |> IO.inspect
+    added_stake = stake
 
     {:noreply, assign(socket, stake: added_stake)}
   end

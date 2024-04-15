@@ -23,7 +23,7 @@ defmodule SwiftBet.Accounts do
 
   """
   def get_user_by_email(email) when is_binary(email) do
-    Repo.get_by(User, email: email)
+    Repo.get_by(User, email: email) |> Repo.preload(:role)
   end
 
   @doc """
@@ -40,7 +40,7 @@ defmodule SwiftBet.Accounts do
   """
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
-    user = Repo.get_by(User, email: email)
+    user = Repo.get_by(User, email: email)  |> Repo.preload(:role)
     if User.valid_password?(user, password), do: user
   end
 
@@ -232,6 +232,7 @@ list_users
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
     Repo.one(query)
+    |> Repo.preload(:role)
   end
 
   @doc """

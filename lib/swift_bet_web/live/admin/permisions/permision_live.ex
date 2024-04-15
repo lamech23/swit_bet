@@ -1,6 +1,8 @@
 defmodule SwiftBetWeb.Permisions.PermisionsLive do
   use SwiftBetWeb, :live_view
   alias SwiftBet.Permissions
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
+
 
   def render(assigns) do
     ~H"""

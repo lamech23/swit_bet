@@ -56,6 +56,7 @@ defmodule SwiftBetWeb.Router do
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
+
     end
 
     post "/users/log_in", UserSessionController, :create
@@ -71,19 +72,22 @@ defmodule SwiftBetWeb.Router do
     end
 
   end
-  scope "/root", SwiftBetWeb do
+  scope "/user", SwiftBetWeb do
     pipe_through [:browser]
-    
-  # live("/home",Home.HomeLive, :new)
-  # live("/add-game",Games.GameLive, :new)
-  # live("/list",Games.GameIndexLive, :index)
-  # live("/roles",Roles.RoleLive, :new)
-  # live("/role/:id/edit",Roles.RoleLive, :edit)
-  # live("/roles/lists",Roles.RoleIndexLive, :index)
-  # live("/roles/create",Roles.RoleLive, :new)
-  # live("/create-user",Admin.CreateAdminLive, :new)
-  # live("/users",Admin.ListUsersLive, :index)
-  # live("/permisions",Permisions.PermisionsLive, :index)
+
+    live_session :current_users,
+    on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}, {SwiftBetWeb.UserAuth, :ensure_authenticated}] do
+
+
+    live("/home",Home.HomeLive, :new)
+    live("/bet-slip",BetSlip.BettingSlipLive, :index)
+    live("/bet-history/:id",BetSlip.BetHistoryLive, :index)
+    get "/users/log_out", UserSessionController, :delete
+
+
+
+
+end
 end
 
   
@@ -91,16 +95,15 @@ end
   scope "/root", SwiftBetWeb do
     pipe_through [:browser]
 
-    get "/users/log_out", UserSessionController, :delete
 
     live_session :current_user,
-      on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}] do
+      on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}, {SwiftBetWeb.UserAuth, :ensure_authenticated},  {SwiftBetWeb.UserAuth, :admin_auth}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
 
-      live("/home",Home.HomeLive, :new)
       live("/add-game",Games.GameLive, :new)
       live("/list",Games.GameIndexLive, :index)
+      live("/analytics",Admin.AnalyticsLive, :index)
       live("/roles",Roles.RoleLive, :new)
       live("/role/:id/edit",Roles.RoleLive, :edit)
       live("/roles/lists",Roles.RoleIndexLive, :index)
@@ -108,9 +111,7 @@ end
       live("/create-user",Admin.CreateAdminLive, :new)
       live("/users",Admin.ListUsersLive, :index)
       live("/permisions",Permisions.PermisionsLive, :index)
-      live("/bet-slip",BetSlip.BettingSlipLive, :index)
-      live("/dashboard",Sidebar.SideNavLive, :index)
-      live("/bet-history/:id",BetSlip.BetHistoryLive, :index)
+      live("/users-bets/:id",BetSlip.SpecificUserBetsLive, :index)
 
     end
   end

@@ -81,7 +81,7 @@ defmodule SwiftBetWeb.UserAuth do
     conn
     |> renew_session()
     |> delete_resp_cookie(@remember_me_cookie)
-    |> redirect(to: ~p"/")
+    |> redirect(to: ~p"/user/home")
   end
 
   @doc """
@@ -145,6 +145,24 @@ defmodule SwiftBetWeb.UserAuth do
   """
   def on_mount(:mount_current_user, _params, session, socket) do
     {:cont, mount_current_user(socket, session)}
+  end
+
+  def on_mount(:admin_auth, _params, session, socket) do
+    user = socket.assigns.current_user 
+
+    case user do
+      %{role: %{name: "admin"}}  ->
+      
+        {:cont, socket}
+
+        _other ->
+          {:halt, 
+          socket
+          |>Phoenix.LiveView.redirect(to: "/user/home")
+          |> Phoenix.LiveView.put_flash(:error, "Your not  authorised to acces  this resource.") 
+        }
+
+    end
   end
 
   def on_mount(:ensure_authenticated, _params, session, socket) do
@@ -223,6 +241,6 @@ defmodule SwiftBetWeb.UserAuth do
 
   defp maybe_store_return_to(conn), do: conn
 
-  defp signed_in_path(_conn), do: ~p"/root/home"
+  defp signed_in_path(_conn), do: ~p"/user/home"
   defp admin_path(_conn), do: ~p"/root/"
 end

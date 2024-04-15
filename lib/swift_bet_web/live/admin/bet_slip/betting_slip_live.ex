@@ -12,13 +12,15 @@ defmodule SwiftBetWeb.BetSlip.BettingSlipLive do
         <div class="flex flex-row justify-between  items-start  border rounded-lg bg-gray-100 hover:bg-gray-300 shadow-xl shadow-indigo-100  w-1/2  h-60  ">
           <div class="m-10">
             <.link
-              navigate={~p"/root/bet-history/#{slip.slip_id}"}
+              navigate={~p"/user/bet-history/#{slip.slip_id}"}
               phx-click="slip_id"
               phx-value-id={slip.slip_id}
               class="font-bold text-3xl text-gray-600"
             >
               <%= " #{slip.relative_time}" %>
             </.link>
+
+            
           </div>
           <div class="m-10">
               <div class="flex flex-col gap-4 ">
@@ -62,10 +64,7 @@ defmodule SwiftBetWeb.BetSlip.BettingSlipLive do
       end)
 
 
-      # slips |> Enum.map(fn items ->
-      #   item
-        
-      #   )
+ 
 
     {:ok, assign(socket, bets: bets, bet_ids: bet_ids, slips: times)}
   end

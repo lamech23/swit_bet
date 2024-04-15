@@ -3,7 +3,7 @@ defmodule SwiftBetWeb.UserLoginLive do
 
   def render(assigns) do
     ~H"""
-    <div class="mx-auto max-w-sm">
+    <div class="mx-auto w-1/2 border p-10 shadow-lg" >
       <.header class="text-center">
         Sign in to account
         <:subtitle>

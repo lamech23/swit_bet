@@ -3,6 +3,8 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
   alias SwiftBet.Accounts
   alias SwiftBet.Role.Roles
   alias SwiftBet.Accounts.User
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
+
 
   def render(assigns) do
     ~H"""

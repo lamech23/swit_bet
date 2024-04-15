@@ -1,6 +1,8 @@
 defmodule SwiftBetWeb.Games.GameLive do
   use SwiftBetWeb, :live_view
   alias SwiftBet.Games
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
+
 
   def mount(_params, _session, socket) do
     changeset = Games.change_games(%Games{})

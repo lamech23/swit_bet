@@ -1,6 +1,8 @@
 defmodule SwiftBetWeb.Games.GameIndexLive do
   use SwiftBetWeb, :live_view
   alias  SwiftBet.Games
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
+
 
   def mount(_params, _session, socket) do
 

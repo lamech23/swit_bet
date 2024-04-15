@@ -2,6 +2,8 @@ defmodule SwiftBetWeb.Roles.RoleLive do
   use SwiftBetWeb, :live_view
   alias SwiftBet.Role.Roles
   alias SwiftBet.Permissions
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
+
 
   def mount(_params, _session, socket) do
     changeset = Roles.change_role(%Roles{})

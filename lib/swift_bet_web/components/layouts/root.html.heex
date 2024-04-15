@@ -63,8 +63,7 @@
           </li>
           <li>
             <.link
-              href={~p"/users/log_out"}
-              method="delete"
+              href={~p"/user/users/log_out"}
               class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
               Log out
             </.link>
@@ -74,12 +73,25 @@
 
         
           <.link
-          href={~p"/root/bet-slip"}
+          href={~p"/user/bet-slip"}
           class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
           >
           Bet-slip
         </.link>
+
       </li>
+
+        <%= if  @current_user.role.name =="admin" do %>
+           <li>
+        <.link
+        href={~p"/root/analytics"}
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+        >
+        Dashboard
+      </.link>
+      </li>
+      <% else %>
+      <% end %>
       
 
         </ul>
@@ -90,7 +102,7 @@
         <li>
           <.link
             href={~p"/users/register"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+            class="text-lg leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
           >
             Register
           </.link>
@@ -98,7 +110,7 @@
         <li>
           <.link
             href={~p"/users/log_in"}
-            class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
+            class="text-lg leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
           >
             Log in
           </.link>

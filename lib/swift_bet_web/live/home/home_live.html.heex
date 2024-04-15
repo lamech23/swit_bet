@@ -22,7 +22,7 @@
       <div class="p-4 flex flex-col">
         <div class="flex justify-start gap-4">
           <span class="text-2xl font-semibold text-gray-500 uppercase">Kick-off Time:</span>
-          <span class="text-2xl font-bold"><%= game.time %></span>
+          <span class="text-2xl font-bold"><%= game.relative_time %></span>
         </div>
         <div class="flex justify-start gap-4 mt-2">
           <span class="text-2xl font-semibold text-gray-500 uppercase">Teams:</span>
@@ -32,9 +32,9 @@
       
 
       <div class="flex flex-row justify-end items-center gap-4">
-        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer "phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.home}  phx-value-selection="home"><%= game.home %></span>
-        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer" phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.draw}   phx-value-selection="draw"><%= game.draw %></span>
-        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer" phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.away}   phx-value-selection="away"><%= game.away %></span>
+        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer " phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.home}  phx-value-selection="home"><%= game.home %></span>
+        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer " phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.draw}   phx-value-selection="draw"><%= game.draw %></span>
+        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer " phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.away}   phx-value-selection="away"><%= game.away %></span>
       </div>
     </div>
     <% end %>
