@@ -17,8 +17,8 @@ defmodule SwiftBet.Application do
       # Start a worker by calling: SwiftBet.Worker.start_link(arg)
       # {SwiftBet.Worker, arg},
       # Start to serve requests, typically the last entry
-      SwiftBetWeb.Endpoint,
-      {Oban, Application.fetch_env!(:swift_bet, Oban)}
+      {Oban, oban_config()},
+      SwiftBetWeb.Endpoint
 
     ]
 
@@ -34,5 +34,9 @@ defmodule SwiftBet.Application do
   def config_change(changed, _new, removed) do
     SwiftBetWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp oban_config() do
+    Application.fetch_env!(:swift_bet, Oban)
   end
 end

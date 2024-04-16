@@ -66,20 +66,26 @@ defmodule SwiftBet.Games do
 
   def change_bet_status_to_lose() do
     bets_to_update =
-      from(b in Bets,
-        where: b.status == "open" and b.inserted_at <= fragment("?", ^DateTime.utc_now() - 10),
-        select: b.id
-      )
-      |> Repo.all()
+    from(b in Bets,
+      where: b.status == "open",
+      select: b.id
+    )
+    |> Repo.all()
 
-    bets_to_update
-    |> Enum.each(fn bet_id ->
-      bet = Repo.get!(Bets, bet_id)
-      bet
-      |> change(status: "lose")
-      |> Repo.update()
-    end)
-  end
+  bets_to_update
+  |> Enum.each(fn bet_id ->
+    bet = Repo.get!(Bets, bet_id)
+    new_status =
+      case Enum.random(["lose", "win"]) do
+        "lose" -> "lose"
+        "win" -> "win"
+      end
+
+    bet
+    |> change(status: new_status)
+    |> Repo.update()
+  end)
+  end 
 
 
 

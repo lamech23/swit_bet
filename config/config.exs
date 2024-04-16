@@ -56,25 +56,27 @@ config :tailwind,
     cd: Path.expand("../assets", __DIR__)
   ]
 
-config :games, Oban,
+config :swift_bet, Oban,
   repo: Swift.Repo,
   queues: [
     
     events: [limit: 1000],
-    plugins: [
-      {Oban.Plugins.Cron,
-       crontab: [
-         {"* * * * *", SwiftBet.Worker},
-        #  {"0 * * * *", MyApp.HourlyWorker, args: %{custom: "arg"}},
-        #  {"0 0 * * *", MyApp.DailyWorker, max_attempts: 1},
-        #  {"0 12 * * MON", MyApp.MondayWorker, queue: :scheduled, tags: ["mondays"]},
-        #  {"@daily", MyApp.AnotherDailyWorker}
-       ]}],
-
+    
+ 
 
     default: 5
-  ]
+  ],
+  plugins: [
+    {Oban.Plugins.Cron,
+     crontab: [
+       {"* * * * *", SwiftBet.Worker},
+      #  {"0 * * * *", MyApp.HourlyWorker, args: %{custom: "arg"}},
+      #  {"0 0 * * *", MyApp.DailyWorker, max_attempts: 1},
+      #  {"0 12 * * MON", MyApp.MondayWorker, queue: :scheduled, tags: ["mondays"]},
+      #  {"@daily", MyApp.AnotherDailyWorker}
+     ]}]
 
+  
 
   config :swift_bet, Oban,
   engine: Oban.Engines.Basic,
