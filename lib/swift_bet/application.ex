@@ -17,7 +17,9 @@ defmodule SwiftBet.Application do
       # Start a worker by calling: SwiftBet.Worker.start_link(arg)
       # {SwiftBet.Worker, arg},
       # Start to serve requests, typically the last entry
-      SwiftBetWeb.Endpoint
+      SwiftBetWeb.Endpoint,
+      {Oban, Application.fetch_env!(:swift_bet, Oban)}
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -29,12 +29,19 @@
           <span class="text-2xl font-bold text-gray-800 dark:text-gray-500"><%= game.teams %></span>
         </div>
       </div>
-      
 
-      <div class="flex flex-row justify-end items-center gap-4">
-        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer " phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.home}  phx-value-selection="home"><%= game.home %></span>
-        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer " phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.draw}   phx-value-selection="draw"><%= game.draw %></span>
-        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    bg-gray-100 cursor-pointer " phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.away}   phx-value-selection="away"><%= game.away %></span>
+      <div  x-data="{ selected : false }" class="flex flex-row justify-end items-center gap-4">
+
+        <span 
+        @click="selected = !selected "
+        x-bind:class="  selected  ? 'bg-yellow-200 hover:bg-yellow-300' :'bg-indigo-100'"
+        class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    cursor-pointer "
+           phx-value-home={game.id} phx-value-odd={game.home}  phx-value-selection="home"  phx-click="place_slip"
+          ><%= game.home %></span>
+        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    cursor-pointer " phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.draw}   phx-value-selection="draw"><%= game.draw %></span>
+        <p x-effect="console.log(selected)"></p>
+
+        <span class="text-2xl border p-8 w-60 rounded-lg text-black hover:bg-gray-300 shadow-lg shadow-indigo-200    cursor-pointer " phx-click="place_slip" phx-value-home={game.id} phx-value-odd={game.away}   phx-value-selection="away"><%= game.away %></span>
       </div>
     </div>
     <% end %>
@@ -77,11 +84,21 @@
       </div>
       <div class="flex flex-col">
         <label for="stake" class="text-lg font-semibold">Stake:</label>
-        <input 
-        type="text" 
+        <.simple_form
+        for={@form}
+        id="sake"
+        :let={f}
+        >
+        <.input 
+        type="number" 
+        field={f[:stake]}
         id="stake"
-         class="border px-3 py-2 rounded-md"
-          placeholder="Enter stake" phx-change="stake" />
+        class="border px-3 py-2 rounded-md"
+        value={@stake}
+        phx-change="stake" 
+          />
+      </.simple_form>
+
       </div>
     </div>
   

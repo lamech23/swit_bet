@@ -11,6 +11,7 @@ defmodule SwiftBet.Bets do
     field :away, :string
     field :day, :date
     field :draw, :string
+    
     field :home, :string
     field :teams, :string
     field :stake, :string
@@ -55,6 +56,44 @@ defmodule SwiftBet.Bets do
       |> Repo.update()
     end)
   end
+
+  def lost_bets() do
+
+    query = from(p in __MODULE__,
+    where: p.status == "lose",
+    select: p.total_payout
+    
+    )
+    |> Repo.all()
+
+    |> Enum.map(fn  item ->
+      item
+      |> String.to_float()
+      
+    end )
+    |> Enum.sum()
+  end
+  def won_bets() do
+
+    query = from(p in __MODULE__,
+    where: p.status == "won",
+    select: p.total_payout
+    
+    
+    )
+    |> Repo.all()
+
+    |> Enum.map(fn  item ->
+      item
+      |> String.to_float()
+      |>IO.inspect()
+      
+    end )
+    |> Enum.sum()
+  end
+    
+    
+
 
   def update_slip_id(bet, slip_id) do
     bet

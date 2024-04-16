@@ -2,12 +2,12 @@
 
 class=" grid grid-flow-row auto-rows-max mt-10 shadow-2xl     "
 :let={f}
-for={@form}
-id="games_foem"
+for={@changeset}
+id="games_form"
 phx-submit="save_game"
 
 >
-    <div class="text-center text-3xl uppercase text-teal-400 ">add bet </div>
+    <div class="text-center text-3xl uppercase text-teal-400 "><%= @desc_title %> </div>
     <div class="grid grid-cols-8  gap-4">
 
         <div class="col-span-4">
@@ -37,6 +37,11 @@ phx-submit="save_game"
       </div>
       
 
+<%= if @live_action == :new do %>
+    <.button phx-disable-with="submiting....."> <%= @page_title %></.button>
 
-    <.button phx-disable-with="submiting....."> submit</.button>
+    <% else %>
+    <.button phx-disable-with="updating....."> <%= @page_title %></.button>
+    <% end %>
+
 </.simple_form>

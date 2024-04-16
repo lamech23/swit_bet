@@ -6,27 +6,24 @@ defmodule SwiftBetWeb.BetSlip.BetHistoryLive do
     ~H"""
     <div class="flex flex-col justify-center items-center  ">
       <h2 class="text-3xl   font-semibold mb-4">Bet Slip - SwiftBet</h2>
-      <h2 class="text-3xl text-green-600  font-semibold mb-4 "><%= @status.status%></h2>
+      <h2 class="text-3xl text-green-600  font-semibold mb-4 "><%= @status.status %></h2>
       <div class="flex flex-col gap-8 w-1/2   ">
         <%= for bet <- @slip_list do %>
           <div class=" flex flex-row justify-between  item-center  border w-full p-10 shadow-md shadow-indigo-100 ">
-            
             <div>
-            <p class="text-2xl mb-4  text-gray-600">Teams </p>
-            <p class="font-semibold text-3xl capitalize"><%= bet.teams  %></p>
+              <p class="text-2xl mb-4  text-gray-600">Teams</p>
+              <p class="font-semibold text-3xl capitalize"><%= bet.teams %></p>
             </div>
             <div>
-            <p class="text-2xl mb-4  text-gray-600">Odd</p>
+              <p class="text-2xl mb-4  text-gray-600">Odd</p>
 
-            <p class="text-gray-500 text-2xl"><%= bet.odds %></p>
-
+              <p class="text-gray-500 text-2xl"><%= bet.odds %></p>
             </div>
 
             <div>
-            <p class="text-2xl mb-4  text-gray-600">Pick</p>
+              <p class="text-2xl mb-4  text-gray-600">Pick</p>
 
-            <p class="text-2xl text-teal-500"><%= bet.selected  %></p>
-
+              <p class="text-2xl text-teal-500"><%= bet.selected %></p>
             </div>
           </div>
         <% end %>
@@ -49,14 +46,11 @@ defmodule SwiftBetWeb.BetSlip.BetHistoryLive do
   end
 
   def handle_params(%{"id" => id}, _uri, socket) do
-    slip_list =
-      Bets.get_user_bets(id)
+    slip_list = Bets.get_user_bets(id)
 
-
-      bet_status = slip_list
+    bet_status =
+      slip_list
       |> Enum.at(1)
-      # |> Enum.map( fn item -> item |> IO.inspect end)
-
 
     bet_ids = slip_list |> Enum.map(& &1.id)
 

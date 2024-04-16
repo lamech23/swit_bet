@@ -1,11 +1,12 @@
 defmodule SwiftBetWeb.Admin.AnalyticsLive do
   use SwiftBetWeb, :live_view
   use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
+  alias SwiftBet.Bets
 
 
   def render(assigns) do
     ~H"""
-<div class="flex flex-row justify-center item-center gap-10 w-full mt-10">
+<div class="flex flex-row justify-center item-center gap-10 w-full mt-10 ">
 <article class="flex items-end justify-between  rounded-lg border w-1/3 border-gray-100 bg-white p-6">
   <div class="flex items-center gap-4">
     <span class="hidden rounded-full bg-gray-100 p-2 text-gray-600 sm:block">
@@ -28,7 +29,7 @@ defmodule SwiftBetWeb.Admin.AnalyticsLive do
     <div>
       <p class="text-sm text-gray-500">Profit</p>
 
-      <p class="text-2xl font-medium text-gray-900">$240.94</p>
+      <p class="text-2xl font-medium text-gray-900">ksh <%= @profit %> </p>
     </div>
   </div>
 
@@ -74,7 +75,7 @@ defmodule SwiftBetWeb.Admin.AnalyticsLive do
     <div>
       <p class="text-sm text-gray-500">lose</p>
 
-      <p class="text-2xl font-medium text-gray-900">$240.94</p>
+      <p class="text-2xl font-medium text-gray-900">ksh <%= @lose %></p>
     </div>
   </div>
 
@@ -103,6 +104,11 @@ defmodule SwiftBetWeb.Admin.AnalyticsLive do
   end
 
   def mount(_session, _params, socket) do
-    {:ok, socket}
+     profit = Bets.lost_bets()
+     lose = Bets.won_bets()
+     |> IO.inspect()
+
+
+    {:ok, assign(socket, profit: profit, lose: lose)}
   end
 end

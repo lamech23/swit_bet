@@ -5,6 +5,7 @@ defmodule SwiftBet.Games do
 # @type t :: %__MODULE__{away:String.t(), day:Date.t(), home:String.t(), draw:String.t(), away:String.t(), teams:String.t(), away:String.t(),   }
   alias SwiftBet.Account.User
   alias SwiftBet.Repo
+  alias SwiftBet.Bets
 
   schema "game" do
     field :away, :string
@@ -58,6 +59,27 @@ defmodule SwiftBet.Games do
     Repo.get!(__MODULE__, id)
   end
 
+
+  def delete_game(game) do
+    Repo.delete(game)
+  end
+
+  def change_bet_status_to_lose() do
+    bets_to_update =
+      from(b in Bets,
+        where: b.status == "open" and b.inserted_at <= fragment("?", ^DateTime.utc_now() - 10),
+        select: b.id
+      )
+      |> Repo.all()
+
+    bets_to_update
+    |> Enum.each(fn bet_id ->
+      bet = Repo.get!(Bets, bet_id)
+      bet
+      |> change(status: "lose")
+      |> Repo.update()
+    end)
+  end
 
 
 

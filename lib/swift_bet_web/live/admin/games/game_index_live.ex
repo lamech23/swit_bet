@@ -11,5 +11,17 @@ defmodule SwiftBetWeb.Games.GameIndexLive do
       {:ok, assign(socket, games: all_games)}
     end
 
+    
+
+  def handle_event("delete_game", %{"id" => id}, socket) do
+    game = Games.get_game!(id)
+    Games.delete_game(game)
+
+    {:noreply,
+    socket =
+     socket
+     |> put_flash(:info, "Game  deleted successfully")}
+  end
+
 
 end

@@ -19,7 +19,7 @@ defmodule SwiftBet.MixProject do
   def application do
     [
       mod: {SwiftBet.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :oban]
     ]
   end
 
@@ -52,7 +52,8 @@ defmodule SwiftBet.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
-      {:timex, "~> 3.7"}
+      {:timex, "~> 3.7"},
+      {:oban, "~> 2.17"}
     ]
   end
 

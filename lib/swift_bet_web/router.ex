@@ -102,6 +102,8 @@ end
       live "/users/confirm", UserConfirmationInstructionsLive, :new
 
       live("/add-game",Games.GameLive, :new)
+      live("/game/:id",Games.GameLive, :edit)
+      
       live("/list",Games.GameIndexLive, :index)
       live("/analytics",Admin.AnalyticsLive, :index)
       live("/roles",Roles.RoleLive, :new)

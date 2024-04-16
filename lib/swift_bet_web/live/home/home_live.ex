@@ -15,16 +15,14 @@ defmodule SwiftBetWeb.Home.HomeLive do
       case  Timex.format(item.time, "{Mshort} {0M} {YYYY} {D} at {h12}:{m}") do
         {:ok, time} ->
           Map.put(item, :relative_time, time)
-          |> IO.inspect()
       end
       
     end)
     
-
     
     selected_items = []
     total_odds = 0.0
-    stake = Map.get(socket.assigns, :stake, 100) |> Integer.to_string()
+    stake = Map.get(socket.assigns, :stake, 0) |> Integer.to_string()
 
     {:ok,
      assign(socket,
@@ -147,11 +145,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
   def handle_event("save_bets", _params, socket) do
     bets =
       socket.assigns.bets
-      |> Enum.map(fn item ->
-        item 
-        |> Map.put(:status, Enum.random(["won", "lose"]))
-      
-      end)
+  
 
     case add_slip(bets) do
       bets when is_list(bets) ->
@@ -194,6 +188,17 @@ defmodule SwiftBetWeb.Home.HomeLive do
   def handle_event("stake", %{"stake" => stake}, socket) do
     added_stake = stake
 
+    if stake == 0 do 
+      {:noreply,
+      socket = 
+      socket 
+      |> put_flash(:error, "please add an amount ")
+    }
+    {:noreply, socket}
+  else
+      
     {:noreply, assign(socket, stake: added_stake)}
+    end
+
   end
 end

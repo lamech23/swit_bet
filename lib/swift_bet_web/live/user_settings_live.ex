@@ -7,13 +7,14 @@ defmodule SwiftBetWeb.UserSettingsLive do
 
   def render(assigns) do
     ~H"""
+    <section class="flex  flex-col justify-center  gap-4">
     <.header class="text-center">
       Account Settings
       <:subtitle>Manage your account email address and password settings</:subtitle>
     </.header>
 
-    <div class="space-y-12 divide-y">
-      <div>
+    <div class=" flex flex-col justify-center items-center gap-10  ">
+      <div class="w-1/2  border shadow-xl shadow-indigo-200  ">
         <.simple_form
           for={@email_form}
           id="email_form"
@@ -35,7 +36,9 @@ defmodule SwiftBetWeb.UserSettingsLive do
           </:actions>
         </.simple_form>
       </div>
-      <div>
+
+
+      <div class="w-1/2  border shadow-xl shadow-indigo-200 ">
         <.simple_form
           for={@password_form}
           id="password_form"
@@ -75,12 +78,14 @@ defmodule SwiftBetWeb.UserSettingsLive do
 
     <button
       type="button"
-      class=" mt-20 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+      class="  w-fit mt-20 text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
       phx-click={JS.push("soft_delete", value: %{"email"=> @current_user.email})} 
         data-confirm="Are you sure?"
     >
       Delete Account
     </button>
+    </section>
+
     """
   end
 

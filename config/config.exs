@@ -41,6 +41,9 @@ config :esbuild,
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
 
+
+
+
 # Configure tailwind (the version is required)
 config :tailwind,
   version: "3.3.2",
@@ -53,6 +56,32 @@ config :tailwind,
     cd: Path.expand("../assets", __DIR__)
   ]
 
+config :games, Oban,
+  repo: Swift.Repo,
+  queues: [
+    
+    events: [limit: 1000],
+    plugins: [
+      {Oban.Plugins.Cron,
+       crontab: [
+         {"* * * * *", SwiftBet.Worker},
+        #  {"0 * * * *", MyApp.HourlyWorker, args: %{custom: "arg"}},
+        #  {"0 0 * * *", MyApp.DailyWorker, max_attempts: 1},
+        #  {"0 12 * * MON", MyApp.MondayWorker, queue: :scheduled, tags: ["mondays"]},
+        #  {"@daily", MyApp.AnotherDailyWorker}
+       ]}],
+
+
+    default: 5
+  ]
+
+
+  config :swift_bet, Oban,
+  engine: Oban.Engines.Basic,
+  queues: [default: 10],
+  repo: SwiftBet.Repo
+
+  
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
