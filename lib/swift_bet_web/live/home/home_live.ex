@@ -143,6 +143,9 @@ defmodule SwiftBetWeb.Home.HomeLive do
   end
 
   def handle_event("save_bets", _params, socket) do
+
+   items = socket.assigns.selected_items
+   socket.assigns|> IO.inspect()
     bets =
       socket.assigns.bets
   
@@ -164,6 +167,8 @@ defmodule SwiftBetWeb.Home.HomeLive do
         socket =
           socket
           |> put_flash(:info, "Bets placed")
+          |> assign(selected_items: []) 
+
 
         {:noreply, socket}
 

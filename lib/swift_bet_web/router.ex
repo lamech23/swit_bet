@@ -103,6 +103,7 @@ end
 
       live("/add-game",Games.GameLive, :new)
       live("/game/:id",Games.GameLive, :edit)
+      live("/user/:id",Admin.CreateAdminLive, :edit)
       
       live("/list",Games.GameIndexLive, :index)
       live("/analytics",Admin.AnalyticsLive, :index)

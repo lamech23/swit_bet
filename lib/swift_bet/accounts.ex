@@ -377,4 +377,11 @@ list_users
     |> Repo.update()
   end
   
+
+  def update(user, params) do
+    user
+    |> User.registration_changeset(params)
+    |> Repo.update()
+  end
+
 end

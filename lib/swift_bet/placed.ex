@@ -31,6 +31,7 @@ defmodule SwiftBet.Placed do
   def get_slips(user_id) do
     query = from(p in __MODULE__, 
     where: p.user_id == ^user_id,
+    order_by: [desc: p.inserted_at],
     select: p
     
     )

@@ -3,7 +3,7 @@
 
 </div>
 
-<.simple_form :let={f} for={@form} for={@changeset } id="role_form" phx-submit="create_role" 
+<.simple_form :let={f} for={@changeset} id="role_form" phx-submit="create_role" 
 class="w-1/2 mx-auto  shadow-xl">
   <div class="relative z-0 w-full mb-5 group">
     <.input field={f[:name]} type="text" label="Role"
@@ -23,8 +23,8 @@ class="w-1/2 mx-auto  shadow-xl">
   field={f[:permission]}
   type="checkgroup"
   id="permisions"
-    multiple={true}
-  options={[{permission.name, permission.name}]}
+  multiple={true}
+  options={[{permission.name, permission.id}]}
 
 />
 

@@ -1,16 +1,19 @@
 defmodule SwiftBetWeb.Roles.RoleIndexLive do
-    use SwiftBetWeb, :live_view
-    alias SwiftBet.Role.Roles
+  use SwiftBetWeb, :live_view
+  alias SwiftBet.Role.Roles
   use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
 
-    def mount(_params, _session, socket)do
-        roles = Roles.roles()
+  def mount(_params, _session, socket) do
+    roles = Roles.roles()
 
-        {:ok, assign(socket, roles: roles)}
+    user = socket.assigns.current_user.role
 
-    end
+    check_permission =
+      user.permission
+      |> Enum.find(&(&1 == "super-user"))
 
-
+    {:ok, assign(socket, roles: roles, permission: check_permission)}
+  end
 
   def handle_event("delete_role", %{"id" => id}, socket) do
     role = Roles.get_role!(id)
@@ -20,5 +23,4 @@ defmodule SwiftBetWeb.Roles.RoleIndexLive do
      socket
      |> put_flash(:info, "role  deleted successfully")}
   end
-    
 end

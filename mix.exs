@@ -19,7 +19,7 @@ defmodule SwiftBet.MixProject do
   def application do
     [
       mod: {SwiftBet.Application, []},
-      extra_applications: [:logger, :runtime_tools, :oban]
+      extra_applications: [:logger, :runtime_tools, :oban, :bamboo, :bamboo_smtp]
     ]
   end
 
@@ -53,7 +53,11 @@ defmodule SwiftBet.MixProject do
       {:dns_cluster, "~> 0.1.1"},
       {:plug_cowboy, "~> 2.5"},
       {:timex, "~> 3.7"},
-      {:oban, "~> 2.17"}
+      {:oban, "~> 2.17"},
+      {:bamboo, "~> 2.2.0"},
+ {:bamboo_smtp, "~> 4.1.0"}
+
+
     ]
   end
 

@@ -76,4 +76,34 @@ defmodule SwiftBet.Accounts.UserNotifier do
     ==============================
     """)
   end
+
+
+  def bet_lost(user) do
+    deliver(user.email, "Bet status", """
+    ==============================
+    Hi #{user.email},
+  
+    Unfortunately, you have lost a bet.
+  
+    If you have any questions or concerns, feel free to contact us.
+  
+    ==============================
+    """)
+  end
+
+def bet_won(user) do
+  deliver(user.email, "Congratulations on Winning Your Bet!", """
+  ==============================
+  Hi #{user.email},
+
+  Congratulations! You have won your bet.
+
+  Enjoy your victory, and if you have any questions or concerns, feel free to contact us
+  
+
+  ==============================
+  """)
+end
+
+  
 end

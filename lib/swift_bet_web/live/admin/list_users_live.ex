@@ -22,6 +22,9 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
         </thead>
 
         <%= for user <- @users do %>
+        <%= if @current_user.id  == user.id do %>
+
+        <% else %>
           <tbody class="divide-y divide-gray-200">
             <tr>
               <td
@@ -50,6 +53,15 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
               </td>
 
               <td class="px-4 py-2">
+              
+                   <.link patch={~p"/root/user/#{user}"}}
+
+                  class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                >
+                  edit
+                  </.link>
+
+
                 <button
                   type="button"
                   class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
@@ -86,6 +98,7 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
             </tr>
           </tbody>
         <% end %>
+        <% end %>
       </table>
     </div>
 
@@ -95,9 +108,16 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
 
   def mount(_session, _params, socket) do
     users = Accounts.list_users()
+    current_user = socket.assigns.current_user 
+    user = current_user.role
+    check_permission  = user.permission
+     |> Enum.find( &(&1 == "super-user")) 
 
-    {:ok, assign(socket, users: users)}
+
+    {:ok, assign(socket, users: users, permissions: check_permission)}
   end
+
+
 
   def handle_event("delete", %{"id" => id}, socket) do
     post = Accounts.get_user!(id)
@@ -118,6 +138,7 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
   end
 
   def handle_event("Deactivate", %{"id" => id}, socket) do
+
     user = Repo.get(User, id)
     Accounts.soft_delete(user, %{status: "inActive"})
 
@@ -137,4 +158,7 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
      socket
      |> redirect(to: "/root/users-bets/#{id}")}
   end
+
+
+
 end

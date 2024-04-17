@@ -58,7 +58,7 @@ defmodule SwiftBet.Accounts.User do
     |> maybe_validate_unique_email(opts)
   end
 
-  defp validate_password(changeset, opts) do
+  defp validate_password(%Ecto.Changeset{valid?: true, changes: %{password: _password}} = changeset, opts) do
     changeset
     |> validate_required([:password])
     |> validate_length(:password, min: 8, max: 72)
@@ -68,6 +68,9 @@ defmodule SwiftBet.Accounts.User do
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
     |> maybe_hash_password(opts)
   end
+
+  defp validate_password(changeset, _opts), do: changeset
+
 
   defp maybe_hash_password(changeset, opts) do
     hash_password? = Keyword.get(opts, :hash_password, true)

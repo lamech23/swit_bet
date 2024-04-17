@@ -25,6 +25,7 @@ defmodule SwiftBetWeb.Roles.RoleLive do
 
   @impl true
   defp create_role(socket, :new, %{"roles" => role_params}) do
+    role_params |> IO.inspect()
 
     %{current_user: user} =socket.assigns
     role_params_with_user_id =
@@ -83,6 +84,7 @@ defmodule SwiftBetWeb.Roles.RoleLive do
   defp apply_action(socket, :edit, %{"id" => id}) do
     role = Roles.get_role!(id)
     changeset = Roles.change_role(role)
+    
 
     socket
     |> assign(:page_title, "Update  ")

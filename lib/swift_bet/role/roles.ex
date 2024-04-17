@@ -9,7 +9,6 @@ defmodule SwiftBet.Role.Roles do
   schema "roles" do
     field :name, :string
     field :permission, {:array, :string}, default: []
-
     timestamps(type: :utc_datetime)
   end
 

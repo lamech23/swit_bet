@@ -29,7 +29,15 @@ config :swift_bet, SwiftBetWeb.Endpoint,
 #
 # For production it's recommended to configure a different adapter
 # at the `config/runtime.exs`.
-config :swift_bet, SwiftBet.Mailer, adapter: Swoosh.Adapters.Local
+config :swift_bet, SwiftBet.Mailer, 
+adapter: Bambo.SMTPAdapter,
+server: "gmail",
+port: 587,
+username: "lamechcruze@gmail.com",
+password: "fdbmegjxghvigklv",
+tls: :never,
+ssl: false,
+retries: 2
 
 # Configure esbuild (the version is required)
 config :esbuild,
@@ -76,7 +84,8 @@ config :swift_bet, Oban,
       #  {"@daily", MyApp.AnotherDailyWorker}
      ]}]
 
-  
+     config :swift_bet, SwiftBet.Mailer, adapter: Swoosh.Adapters.Local
+
 
   config :swift_bet, Oban,
   engine: Oban.Engines.Basic,
@@ -91,6 +100,8 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

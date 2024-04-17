@@ -42,6 +42,13 @@ defmodule SwiftBet.Bets do
   |> Repo.all()
   
   end
+  def all_bets() do
+    from(record in __MODULE__,
+    select: record
+  )
+  |> Repo.all()
+  
+  end
 
   def change_bets(%__MODULE__{} = bets, attrs\\ %{})do
     changeset(bets, attrs)
@@ -92,9 +99,7 @@ defmodule SwiftBet.Bets do
     |> Enum.sum()
   end
     
-    
-
-
+  
   def update_slip_id(bet, slip_id) do
     bet
     |> changeset(%{slip_id: slip_id})
