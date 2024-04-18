@@ -10,6 +10,8 @@ defmodule SwiftBetWeb.Home.HomeLive do
     changeset = Games.change_games(%Games{})
     socket = assign(socket, :form, to_form(changeset))
 
+    socket.assigns.current_user |> IO.inspect()
+
     all_games = Games.list_games()    
     |> Enum.map(fn item -> 
       case  Timex.format(item.time, "{Mshort} {0M} {YYYY} {D} at {h12}:{m}") do
@@ -145,7 +147,6 @@ defmodule SwiftBetWeb.Home.HomeLive do
   def handle_event("save_bets", _params, socket) do
 
    items = socket.assigns.selected_items
-   socket.assigns|> IO.inspect()
     bets =
       socket.assigns.bets
   

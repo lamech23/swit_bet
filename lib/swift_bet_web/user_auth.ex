@@ -148,20 +148,17 @@ defmodule SwiftBetWeb.UserAuth do
   end
 
   def on_mount(:admin_auth, _params, session, socket) do
-    user = socket.assigns.current_user 
+    user = socket.assigns.current_user
 
     case user do
-      %{role: %{name: "admin"}}  ->
-      
+      %{role: %{name: "admin "}} ->
         {:cont, socket}
 
-        _other ->
-          {:halt, 
-          socket
-          |>Phoenix.LiveView.redirect(to: "/user/home")
-          |> Phoenix.LiveView.put_flash(:error, "Your not  authorised to acces  this resource.") 
-        }
-
+      _other ->
+        {:halt,
+         socket
+         |> Phoenix.LiveView.redirect(to: "/user/home")
+         |> Phoenix.LiveView.put_flash(:error, "Your not  authorised to acces  this resource.")}
     end
   end
 

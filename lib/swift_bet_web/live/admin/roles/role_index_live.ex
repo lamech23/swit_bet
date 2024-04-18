@@ -8,11 +8,11 @@ defmodule SwiftBetWeb.Roles.RoleIndexLive do
 
     user = socket.assigns.current_user.role
 
-    check_permission =
-      user.permission
-      |> Enum.find(&(&1 == "super-user"))
+    # check_permission =
+    #   user.permission
+    #   |> Enum.find(&(&1 == "super-user"))
 
-    {:ok, assign(socket, roles: roles, permission: check_permission)}
+    {:ok, assign(socket, roles: roles)}
   end
 
   def handle_event("delete_role", %{"id" => id}, socket) do

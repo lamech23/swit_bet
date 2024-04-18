@@ -7,7 +7,9 @@ defmodule SwiftBet.Permissions do
   # @allowed_permissions ~w(create edit delete)
   schema "permissions" do
     field :name, :string
+    
     timestamps(type: :utc_datetime)
+
   end
 
   @doc false

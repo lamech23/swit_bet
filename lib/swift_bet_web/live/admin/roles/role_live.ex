@@ -2,13 +2,15 @@ defmodule SwiftBetWeb.Roles.RoleLive do
   use SwiftBetWeb, :live_view
   alias SwiftBet.Role.Roles
   alias SwiftBet.Permissions
+  alias SwiftBet.RolePermissions
   use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
 
-
+  @impl true
   def mount(_params, _session, socket) do
     changeset = Roles.change_role(%Roles{})
     permission = Permissions.permissions()
     roles = Roles.roles()
+
     socket = assign(socket, :form, to_form(changeset))
 
     {:ok, assign(socket, roles: roles, permission: permission)}
@@ -25,18 +27,32 @@ defmodule SwiftBetWeb.Roles.RoleLive do
 
   @impl true
   defp create_role(socket, :new, %{"roles" => role_params}) do
-    role_params |> IO.inspect()
+    %{current_user: user} = socket.assigns
 
-    %{current_user: user} =socket.assigns
+
     role_params_with_user_id =
-    role_params
-    |> Map.put("user_id", user.id)
+      role_params
+      |> Map.put("user_id", user.id)
 
-  role_params_with_user_id =
-    Map.merge(role_params, %{"user_id" => role_params_with_user_id["user_id"]})
+    role_params_with_user_id =
+      Map.merge(role_params, %{"user_id" => role_params_with_user_id["user_id"]})
 
     case Roles.create(role_params_with_user_id) do
-      {:ok, _role} ->
+      {:ok, role} ->
+        permissions = role.permission
+
+        Enum.each(permissions, fn item ->
+          case RolePermissions.create(%{role_id: role.id, permission_id: item}) do
+            {:ok, _} ->
+              socket
+              |> put_flash(:info, "Role added successfully")
+              |> redirect(to: "/root/roles/lists")
+
+            {:error, changeset} ->
+              {:noreply, assign(socket, changeset: changeset)}
+          end
+        end)
+
         socket =
           socket
           |> put_flash(:info, " role added  ")
@@ -51,10 +67,16 @@ defmodule SwiftBetWeb.Roles.RoleLive do
 
   @impl true
   defp create_role(socket, :edit, %{"roles" => role_params}) do
-    roles = socket.assigns.role
+    role_params
+    # |> IO.inspect(label: "ROLE PARAMS ONE  ")
 
-    case Roles.update(roles, role_params) do
+    roles = socket.assigns.role
+    # |> IO.inspect(label: "ROLE PARAMS TWO   ")
+
+
+    case Roles.update(roles, role_params)  do
       {:ok, _role} ->
+        
         socket =
           socket
           |> put_flash(:info, " role updated ")
@@ -82,9 +104,11 @@ defmodule SwiftBetWeb.Roles.RoleLive do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    role = Roles.get_role!(id)
+    role =
+      Roles.get_role!(id)
+      # |> IO.inspect()
+
     changeset = Roles.change_role(role)
-    
 
     socket
     |> assign(:page_title, "Update  ")
@@ -92,7 +116,6 @@ defmodule SwiftBetWeb.Roles.RoleLive do
     |> assign(:role, role)
     |> assign(:changeset, changeset)
   end
-
 
   # validate 
   def handle_event("validate", role_params, socket) do

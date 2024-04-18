@@ -4,7 +4,7 @@ defmodule SwiftBet.Repo.Migrations.CreateRoles do
   def change do
     create table(:roles) do
       add :name, :string
-      add :permission, {:array, :string}, default: []
+      add :permission, {:array, :integer}, default: []
 
 
       timestamps(type: :utc_datetime)

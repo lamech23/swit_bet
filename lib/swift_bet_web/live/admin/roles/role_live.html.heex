@@ -19,14 +19,15 @@ class="w-1/2 mx-auto  shadow-xl">
           <div class="flex items-center">
         
 
-               <.input
-  field={f[:permission]}
-  type="checkgroup"
-  id="permisions"
-  multiple={true}
-  options={[{permission.name, permission.id}]}
-
-/>
+            <.input
+            field={f[:permission]}
+            type="checkgroup"
+            id="permisions"
+            multiple={true}
+            options={[{permission.name, permission.id}]}
+          
+          />
+          
 
           </div>
           <% end %>

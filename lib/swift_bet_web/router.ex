@@ -97,7 +97,7 @@ end
 
 
     live_session :current_user,
-      on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}, {SwiftBetWeb.UserAuth, :ensure_authenticated},  {SwiftBetWeb.UserAuth, :admin_auth}] do
+      on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}, {SwiftBetWeb.UserAuth, :ensure_authenticated}, {SwiftBetWeb.UserAuth, :admin_auth}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
 
@@ -107,7 +107,7 @@ end
       
       live("/list",Games.GameIndexLive, :index)
       live("/analytics",Admin.AnalyticsLive, :index)
-      live("/roles",Roles.RoleLive, :new)
+      live("/roles",Roles.RoleCreateLive, :new)
       live("/role/:id/edit",Roles.RoleLive, :edit)
       live("/roles/lists",Roles.RoleIndexLive, :index)
       live("/roles/create",Roles.RoleLive, :new)

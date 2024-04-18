@@ -26,18 +26,42 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
         <.error :if={@check_errors}>
           Oops, something went wrong! Please check the errors below.
         </.error>
-
+        <%= if @live_action == :edit do %>
         <.input field={f[:first_name]} type="text" label="First Name" disabled />
-        <.input field={f[:last_name]} type="text" label="Last Name" disabled />
-        <.input field={f[:email]} type="email" label="Email" required  disabled/>
-        <.input field={f[:msisdn]} type="text" label="Msisdn" disabled/>
+        <% else %>
+        <.input field={f[:first_name]} type="text" label="First Name" />
+
+        <% end %>
+
+
+        <%= if @live_action == :edit do %>
+        <.input field={f[:last_name]} type="text" label="Last Name" disabled  />
+        <% else %>
+        <.input field={f[:last_name]} type="text" label="Last Name"  />
+
+        <% end %>
+
+        <%= if @live_action == :edit do %>
+        <.input field={f[:email]} type="email" label="Email" required disabled />
+        <% else %>
+        <.input field={f[:email]} type="email" label="Email" required  />
+
+        <% end %>
+
+
+        <%= if @live_action == :edit do %>
+        <.input field={f[:msisdn]} type="text" label="Msisdn" disabled />
+        <% else %>
+        <.input field={f[:msisdn]} type="text" label="Msisdn" />
+
+        <% end %>
         <.input
           field={f[:role_id]}
           type="select"
           label="Role"
           options={Enum.map(@role, &{ &1.name, &1.id})}
         />
-        <% if @live_action == :edit do %>
+        <%= if @live_action == :edit do %>
         <% else %>
         <.input field={f[:password]} type="password" label="Password" required />
         <% end %>
@@ -52,6 +76,7 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
   end
 
   def mount(_params, _session, socket) do
+    socket.assigns|> IO.inspect()
     changeset = Accounts.change_user_registration(%User{})
     roles = Roles.roles()
 

@@ -85,22 +85,17 @@ defmodule SwiftBet.Games do
       bet
       |> change(status: new_status)
       |> Repo.update()
-
       |> case do
         {:ok, bet} ->
+          user = Accounts.get_user!(bet.user_id)
 
-        user =  Accounts.get_user!(bet.user_id)
-         if bet.status == "lose" do 
-          IO.puts "lose"
-         UserNotifier.bet_lost(user)
-
-         else
-          IO.puts "win"
-         UserNotifier.bet_won(user)
-
-          
-
-         end
+          if bet.status == "lose" do
+            IO.puts("lose")
+            UserNotifier.bet_lost(user)
+          else
+            IO.puts("win")
+            UserNotifier.bet_won(user)
+          end
 
           user =
             Accounts.get_user!(bet.user_id)
@@ -108,6 +103,4 @@ defmodule SwiftBet.Games do
       end
     end)
   end
-
-
 end

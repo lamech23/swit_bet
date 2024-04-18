@@ -11,7 +11,6 @@ defmodule SwiftBet.Worker do
 
   @impl Oban.Worker
   def perform(_) do
-    # Logger.info("===========")
 
     games = Games.change_bet_status_to_lose()
 

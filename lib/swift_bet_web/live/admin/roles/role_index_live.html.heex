@@ -1,34 +1,26 @@
 <div class="overflow-x-auto mt-20">
-         <table class="min-w-full divide-y-2 divide-gray-200 bg-white text-sm">
-           <thead class="ltr:text-left rtl:text-right">
-             <tr>
-               <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Role</th>
-               <th class="whitespace-nowrap px-4 py-2 font-medium text-gray-900">Action</th>
-  
-               <th class="px-4 py-2"></th>
-             </tr>
-           </thead>
-  
-           <%= for role <- @roles do %>
-             <tbody class="divide-y divide-gray-200">
-               <tr>
-                 <td class="whitespace-nowrap px-4 py-2 font-medium text-gray-900"><%= role.name %></td>
-  
-                 <td class="whitespace-nowrap px-4 py-2">
-                   <.link patch={~p"/root/role/#{role}/edit"}}>
-                     <span class="material-symbols-outlined text-teal-600 cursor-pointer">edit</span>
-                   </.link>
-                   <button
-                     type="button"
-                     class="material-symbols-outlined text-red-600 cursor-pointer"
-                     phx-click={JS.push("delete_role", value: %{"id" => role.id}) |> hide("{role.id}")}
-                     data-confirm="Are you sure you ?"
-                   >
-                     delete
-                   </button>
-                 </td>
-               </tr>
-             </tbody>
-           <% end %>
-         </table>
-       </div>
+  <table class="min-w-full divide-y divide-gray-200 bg-white text-sm">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Role</th>
+        <th class="px-6 py-3 text-left text-xs font-medium text-gray-900 uppercase tracking-wider">Action</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-gray-200">
+      <%= for role <- @roles do %>
+      <tr >
+        <td class="px-6 py-4 whitespace-nowrap">
+          <div class="text-sm text-gray-900"><%= role.name %></div>
+        </td>
+        <td class="px-6 py-4  whitespace-nowrap">
+          <span class=" text-sm text-gray-900">
+            <.link patch={~p"/root/role/#{role}/edit"}} class="btn-edit me-4 text-teal-600">Edit</.link>
+            <button type="button" class="btn-delete text-red-600" phx-click={JS.push("delete_role", value: %{"id" => role.id}) |> hide("{role.id}")} data-confirm="Are you sure you want to delete?">Delete</button>
+          </span>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

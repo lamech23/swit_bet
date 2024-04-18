@@ -81,17 +81,21 @@
 
       </li>
 
-        <%= if  @current_user.role.name =="admin" do %>
-           <li>
-        <.link
-        href={~p"/root/analytics"}
-        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-        >
-        Dashboard
-      </.link>
-      </li>
-      <% else %>
-      <% end %>
+
+      <%= if  @current_user.role.name =="admin " do %>
+      <li>
+   <.link
+   href={~p"/root/analytics"}
+   class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+   >
+   Dashboard
+ </.link>
+ </li>
+ <% else %>
+ <% end %>
+     
+
+     
       
 
         </ul>
