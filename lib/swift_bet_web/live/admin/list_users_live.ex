@@ -117,30 +117,44 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
+
     post = Accounts.get_user!(id)
     Accounts.delete(post)
 
     {:noreply,
      socket
      |> put_flash(:info, "User deleted successfully")}
+
   end
 
   def handle_event("activate", %{"id" => id}, socket) do
+    socket |> IO.inspect(label: "handle_event activate",limit: :infinity)
     user = Repo.get(User, id)
     Accounts.soft_delete(user, %{status: "active"})
 
-    {:noreply,
+   
+     socket=
      socket
-     |> put_flash(:info, "User Activated  Successfully!")}
+     |> put_flash(:info, "User Activated  Successfully!")
+     |> push_redirect(to: "/root/users")
+     {:noreply, socket}
   end
 
   def handle_event("Deactivate", %{"id" => id}, socket) do
+
     user = Repo.get(User, id)
     Accounts.soft_delete(user, %{status: "inActive"})
 
-    {:noreply,
+    
+     socket= 
      socket
-     |> put_flash(:info, "#{user.first_name} has been De-Activated.")}
+     |> put_flash(:info, "#{user.first_name} has been De-Activated.")
+    |> push_redirect(to: "/root/users")
+
+    {:noreply, socket}
+
+
+
   end
 
   def handle_event("user_bets", %{"id" => id}, socket) do

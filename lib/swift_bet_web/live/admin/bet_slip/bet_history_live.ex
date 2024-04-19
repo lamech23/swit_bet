@@ -63,12 +63,12 @@ defmodule SwiftBetWeb.BetSlip.BetHistoryLive do
   end
 
   def handle_params(%{"id" => id}, _uri, socket) do
+    id |>  IO.inspect()
     slip_list = Bets.get_user_bets(id)
 
     bet_status =
       slip_list
       |> Enum.at(1)
-      |> IO.inspect()
 
     bet_ids = slip_list |> Enum.map(& &1.id)
 

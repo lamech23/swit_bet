@@ -145,7 +145,7 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
     
 
     socket
-    |> assign(:page_title, "Create New Game")
+    |> assign(:page_title, "Create User")
     |> assign(:user, %User{})
     |> assign(:changeset, changeset)
     |> assign(:desc_title, "Create ")

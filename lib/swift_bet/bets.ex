@@ -42,6 +42,9 @@ defmodule SwiftBet.Bets do
   |> Repo.all()
   
   end
+
+
+  
   def all_bets() do
     from(record in __MODULE__,
     select: record
