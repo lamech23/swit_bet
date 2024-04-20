@@ -42,18 +42,29 @@ defmodule SwiftBetWeb.Home.HomeLive do
     home_id = String.to_integer(home_id)
     odds = String.to_float(odd)
 
+    stake = socket.assigns.stake
+
     item = socket.assigns.games |> Enum.find(&(&1.id == home_id))
 
     game_odds = socket.assigns.games |> Enum.find(&(&1.id == odds))
 
-    if Enum.any?(socket.assigns.selected_items, &(&1.id == home_id)) do
-      {:noreply,
-       socket =
-         socket
-         |> put_flash(:error, "odd  already selected")}
 
-      {:noreply, socket}
+    if Enum.any?(socket.assigns.selected_items, &(&1.id == home_id)) do
+      selected_items =
+        socket.assigns.selected_items
+        |> Enum.map(fn(item) ->
+          if item.id == home_id, do: %{item | selected: selection}, else: item
+        end)
+        |> Enum.map(fn(item) ->
+          if item.id == home_id, do: %{item | selected: selection}, else: item
+        end)
+
+
+    
+      {:noreply, assign(socket, selected_items: selected_items)}
+    
     else
+
       # Checking if the :odds key is present in the selected item, if not, initialize it with an empty map
       item = Map.update(item, :odds, [], & &1)
 
@@ -61,14 +72,16 @@ defmodule SwiftBetWeb.Home.HomeLive do
       item_with_odds =
         %{item | odds: Enum.join([odd | item.odds], ",")}
         |> Map.put(:selected, selection)
+        |> Map.put(:stake, stake)
 
       # Retrieve the list of selected items from the socket assigns or initialize it if it doesn't exist
 
       selected_items = Map.get(socket.assigns, :selected_items)
 
       # Append the selected item with odds to the list of selected items
-      new_selected_items =
-        [item_with_odds | selected_items]
+      new_selected_items = [item_with_odds | selected_items]
+      # |> IO.inspect(label: "this nigger ")
+
 
       odds_list =
         Enum.map(new_selected_items, & &1.odds)
@@ -93,7 +106,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
             teams: game.teams,
             time: game.time,
             user_id: user.id,
-            selected: selection
+            selected: game.selected
           }
         end)
 
@@ -104,12 +117,14 @@ defmodule SwiftBetWeb.Home.HomeLive do
           Map.put(field, :stake, stake)
           Map.put(field, :selected, selection)
 
-          Map.put(
-            field,
-            :total_payout,
+          Map.put(  field, :total_payout,
             Float.to_string(Float.round(odds_list * String.to_integer(stake), 2))
           )
         end)
+
+
+
+
 
       socket =
         socket
@@ -142,9 +157,18 @@ defmodule SwiftBetWeb.Home.HomeLive do
 
   def handle_event("save_bets", _params, socket) do
     items = socket.assigns.selected_items
-    bets = socket.assigns.bets
-
     stake = socket.assigns.stake
+    odds_list=  socket.assigns.total_odds
+
+    bets =
+      socket.assigns.bets
+      |> Enum.map(fn item ->
+        item
+        |> Map.put(:stake, stake)
+       |> Map.put( :total_payout,
+        Float.to_string(Float.round(odds_list * String.to_integer(stake), 2))
+      )
+      end)
 
     case add_slip(bets) do
       bets when is_list(bets) ->
@@ -200,32 +224,26 @@ defmodule SwiftBetWeb.Home.HomeLive do
     end
   end
 
-  
-
   def handle_event("check_bet_slip", _params, socket) do
     user = socket.assigns.current_user
-  
-    bets = Placed.get_slips(user.id)
-    |> IO.inspect()
-  
+
+    bets =
+      Placed.get_slips(user.id)
+
     case bets do
       [] ->
-        socket = 
-        socket 
-        |> push_redirect(to: "/user/home")
-        |> put_flash(:error, "No bet slip found")
+        socket =
+          socket
+          |> push_redirect(to: "/user/bet-slip")
 
-
-    {:noreply, socket}
-      _ ->
-        socket = 
-        socket
-        |> push_redirect(to: "/user/bet-slip")
         {:noreply, socket}
 
+      _ ->
+        socket =
+          socket
+          |> push_redirect(to: "/user/bet-slip")
+
+        {:noreply, socket}
     end
-
   end
-
-  
 end

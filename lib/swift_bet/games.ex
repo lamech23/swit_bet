@@ -97,9 +97,9 @@ defmodule SwiftBet.Games do
             UserNotifier.bet_won(user)
           end
 
-          user =
-            Accounts.get_user!(bet.user_id)
-            |> UserNotifier.bet_lost(bet)
+          # user =
+          #   Accounts.get_user!(bet.user_id)
+          #   |> UserNotifier.bet_lost(bet)
       end
     end)
   end
