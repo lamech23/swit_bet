@@ -12,7 +12,7 @@ defmodule SwiftBet.Repo.Migrations.CreateUsersAuthTables do
       add :msisdn, :string, null: false
       add :status, :string, default: "active", null: false
       add :confirmed_at, :naive_datetime
-      add :role_id, :integer
+      add :role_id, :integer, default: 2
 
       timestamps(type: :utc_datetime)
     end

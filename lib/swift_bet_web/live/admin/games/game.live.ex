@@ -8,7 +8,16 @@ defmodule SwiftBetWeb.Games.GameLive do
 
     socket = assign(socket, :form, to_form(changeset))
 
-    {:ok, socket}
+
+    super_user = socket.assigns.current_user.role.role_permisions
+    |> Enum.map(fn item ->
+      item.permission.name 
+    end)
+    |> Enum.any?(fn item ->  
+      item === "super-user"
+    end)
+
+    {:ok, assign(socket, super_user: super_user)}
   end
 
   def handle_params(params, _uri, socket) do
@@ -31,7 +40,7 @@ defmodule SwiftBetWeb.Games.GameLive do
         {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 

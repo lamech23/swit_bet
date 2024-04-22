@@ -46,8 +46,10 @@ defmodule SwiftBet.Accounts.User do
   def registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :status,  :password, :first_name, :last_name, :msisdn, :role_id ])
+    |> validate_required([:first_name, :last_name, :msisdn])
     |> validate_email(opts)
     |> validate_password(opts)
+
   end
 
   defp validate_email(changeset, opts) do

@@ -20,6 +20,8 @@ defmodule SwiftBet.Bets do
     field :status, :string, default: "open"
     field :total_payout, :string
     field :selected, :string
+    field :home_out_come, :integer, default: 0
+    field :away_out_come, :integer, default: 0
     field :time, :utc_datetime
     belongs_to(:user, SwiftBet.Users.User)
     timestamps(type: :utc_datetime)
@@ -28,7 +30,7 @@ defmodule SwiftBet.Bets do
   @doc false
   def changeset(bets, attrs) do
     bets
-    |> cast(attrs, [:teams, :home, :draw, :away, :day, :odds, :time, :stake, :user_id, :status, :slip_id, :total_payout, :selected])
+    |> cast(attrs, [:teams, :home, :draw, :away, :day, :odds, :time, :stake, :user_id, :status, :slip_id, :total_payout, :selected, :home_out_come, :away_out_come])
     |> validate_required([:teams, :home, :draw, :away, :day, :odds, :time])
   end
 
@@ -86,7 +88,7 @@ defmodule SwiftBet.Bets do
   def won_bets() do
 
     query = from(p in __MODULE__,
-    where: p.status == "won",
+    where: p.status == "win",
     select: p.total_payout
     
     
@@ -96,7 +98,6 @@ defmodule SwiftBet.Bets do
     |> Enum.map(fn  item ->
       item
       |> String.to_float()
-      |>IO.inspect()
       
     end )
     |> Enum.sum()

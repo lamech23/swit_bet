@@ -61,7 +61,7 @@ defmodule SwiftBetWeb.Roles.RoleLive do
         {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, assign(socket, changeset: changeset )}
     end
   end
 
@@ -84,7 +84,7 @@ defmodule SwiftBetWeb.Roles.RoleLive do
         {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign_form(socket, changeset)}
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 
@@ -124,11 +124,11 @@ defmodule SwiftBetWeb.Roles.RoleLive do
       |> Roles.changeset(role_params)
       |> Map.put(:action, :validate)
 
-    {:noreply, assign_form(socket, changeset: changeset)}
+    {:noreply, assign(socket, changeset: changeset)}
   end
 
-  defp assign_form(socket, %Ecto.Changeset{} = changeset) do
-    socket
-    |> assign(:form, to_form(changeset))
-  end
+  # defp assign_form(socket, %Ecto.Changeset{} = changeset) do
+  #   socket
+  #   |> assign(:form, to_form(changeset))
+  # end
 end

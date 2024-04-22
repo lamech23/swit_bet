@@ -4,6 +4,8 @@ defmodule SwiftBetWeb.UserSettingsLive do
   alias SwiftBet.Accounts
   alias SwiftBet.Repo
   alias SwiftBet.Accounts.User
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :nav}
+
 
   def render(assigns) do
     ~H"""

@@ -55,9 +55,7 @@ defmodule SwiftBet.MixProject do
       {:timex, "~> 3.7"},
       {:oban, "~> 2.17"},
       {:bamboo, "~> 2.2.0"},
- {:bamboo_smtp, "~> 4.1.0"}
-
-
+      {:bamboo_smtp, "~> 4.1.0"}
     ]
   end
 

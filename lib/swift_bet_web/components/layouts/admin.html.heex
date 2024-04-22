@@ -32,6 +32,15 @@
         </.link>
       </li>
 
+      <%= if @current_user.role.role_permisions
+      |> Enum.map(fn item ->
+        item.permission.name 
+      end)
+      |> Enum.any?(fn item ->  
+        item === "super-user"
+      end)  == true 
+      do  %> 
+
       <li>
         <.link                            
         class="flex items-center p-2 text-gray-900 rounded-lg  hover:bg-gray-100 dark:hover:bg-gray-700"
@@ -42,6 +51,9 @@
 
         </.link>
       </li>
+
+      <% else %>
+      <% end %>
 
       <li>
         <.link                            

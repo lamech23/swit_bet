@@ -4,6 +4,8 @@ defmodule SwiftBetWeb.BetSlip.BettingSlipLive do
   alias SwiftBet.Accounts.User
   alias SwiftBet.Repo
   alias SwiftBet.Placed
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :nav}
+
 
   def render(assigns) do
     ~H"""
@@ -56,11 +58,30 @@ defmodule SwiftBetWeb.BetSlip.BettingSlipLive do
         </div>
       </div>
 
-      <div class="m-10 flex flex-col gap-4">
-        <span class="flex flex-row gap-2 font-bold text-2xl text-gray-600 capitalize">
-          <span>Possible Win -</span>
+      <div class="m-10 flex flex-col  gap-4">
+        <span class="flex flex-row justify-center items-center  gap-2 font-bold text-2xl text-gray-600 capitalize">
+          <span>Possible Win </span>
           <p>KSH</p>
-          <p><%= slip.total_payout %></p>
+          <%= cond  do %>
+          <% slip.status == "lose" -> %>
+          <div class="flex flex-row justify-center  items-center">
+          <span class="text-red-500"> 0.0 </span>
+          </div>
+          <% slip.status == "win"->%>
+
+          <p class="text-green-500 "><%= slip.total_payout %></p>
+          <% slip.status == "cancelled"-> %>
+          <span class="text-red-500"> 0.0 </span>
+          <% true -> %>
+
+          <span class="text-red-500"> 0.0 </span>
+
+
+
+
+
+  <% end %>
+
         </span>
       </div>
     </div>

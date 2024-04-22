@@ -6,6 +6,7 @@ defmodule SwiftBet.Role.Roles do
   alias SwiftBet.Accounts
   alias SwiftBet.Permissions
   alias SwiftBet.RolePermissions
+  alias SwiftBet.Permissions
   alias SwiftBet.Accounts.User
 
   schema "roles" do
@@ -13,6 +14,7 @@ defmodule SwiftBet.Role.Roles do
     field :permission, {:array, :integer}, default: []
     field(:permission_ids,  {:array, :integer}, virtual: true)
     has_many :role_permisions, RolePermissions, foreign_key: :role_id
+    has_many :permissions, RolePermissions
     timestamps(type: :utc_datetime)
   end
 
@@ -22,7 +24,8 @@ defmodule SwiftBet.Role.Roles do
     |> cast(attrs, [:name, :permission_ids, :permission])
     |> handle_permission_ids(attrs)
     |> cast_assoc(:role_permisions)
-    |> validate_required([:name])
+    |> validate_required([:name, :permission, :permission_ids])
+    |>  unique_constraint(:name, message: "duplicate not allowed")
    
 
   end
@@ -32,7 +35,7 @@ defp handle_permission_ids(changeset, _attrs) do
   case changeset do
     %Ecto.Changeset{valid?: true, changes: %{permissions: permissions}} ->
       put_change(changeset, :permissions, permissions)
-      # |> IO.inspect(label: "handle_permission_ids")
+      # |> IO.inspect(label: "handle_permission_ids")x
     _ ->
       changeset
   end

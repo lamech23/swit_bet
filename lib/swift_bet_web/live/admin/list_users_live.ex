@@ -18,6 +18,8 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
             <th class="px-4 py-2 font-medium text-gray-900">Account Status</th>
             <th class="px-4 py-2 font-medium text-gray-900">Msisdn</th>
             <th class="px-4 py-2 font-medium text-gray-900">Role</th>
+            <th class="px-4 py-2 font-medium text-gray-900">Permisions</th>
+
             <th class="px-4 py-2 font-medium text-gray-900">Actions</th>
           </tr>
         </thead>
@@ -53,13 +55,32 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
                 </td>
 
                 <td class="px-4 py-2">
-                  <.link
-                    patch={~p"/root/user/#{user}"}
-                    }
-                    class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                  >
-                    edit
-                  </.link>
+                  <div class="flex flex-row flex-wrap gap-2">
+                    <%= user.role.role_permisions
+                    |> Enum.map(fn item -> item.permission.name end)
+                    |> Enum.map(fn name ->
+                      "<div class='flex flex-col  items-center'>
+        <span class='text-gray-900 text-lg '>" <> name <> "</span>
+
+        <span class=' material-symbols-outlined text-xs text-rose-500 ml-2 cursor-pointer' phx-click='delete_permission' phx-value-user_id='{user.id}' phx-value-permission_id={item.id}>Delete</span>
+      </div>"
+                    end)
+                    |> Enum.join("")
+                    |> raw %>
+                  </div>
+                </td>
+
+                <td class="px-4 py-2">
+                  <%= if @super_user == true do %>
+                    <.link
+                      patch={~p"/root/user/#{user}"}
+                      }
+                      class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                    >
+                      edit
+                    </.link>
+                  <% else %>
+                  <% end %>
 
                   <%= if user.status == "active" do %>
                     <button
@@ -95,6 +116,15 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
                   >
                     games
                   </button>
+
+                  <button
+                    type="button"
+                    phx-click={show_modal("permission-Modal")}
+                    phx-value-id={user.id}
+                    class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
+                    permisions
+                  </button>
                 </td>
               </tr>
             </tbody>
@@ -106,55 +136,69 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
   end
 
   def mount(_session, _params, socket) do
-    users = Accounts.list_users()
+    users =
+      Accounts.list_users()
+      |> IO.inspect()
+
     current_user = socket.assigns.current_user
     user = current_user.role
     # check_permission  = user.permission
     #  |> Enum.find( &(&1 == "super-user")) 
     RolePermissions.role_permision_list()
 
-    {:ok, assign(socket, users: users)}
+    super_user =
+      socket.assigns.current_user.role.role_permisions
+      |> Enum.map(fn item ->
+        item.permission
+      end)
+      |> Enum.any?(fn item ->
+        item === "super-user"
+      end)
+      |> IO.inspect(label: "Super User")
+
+    {:ok, assign(socket, users: users, super_user: super_user)}
+  end
+
+  def handle_event("check_permisions", %{"id" => id}, socket) do
+    id |> IO.inspect(label: "User ID")
+
+    {:noreply, socket}
   end
 
   def handle_event("delete", %{"id" => id}, socket) do
-
     post = Accounts.get_user!(id)
     Accounts.delete(post)
 
-    {:noreply,
-     socket
-     |> put_flash(:info, "User deleted successfully")}
+     socket= 
+     socket 
+     |> put_flash(:info, "User deleted successfully")
+     |> push_redirect(to: "/root/users")
 
+     {:noreply, socket }
   end
 
   def handle_event("activate", %{"id" => id}, socket) do
-    socket |> IO.inspect(label: "handle_event activate",limit: :infinity)
     user = Repo.get(User, id)
     Accounts.soft_delete(user, %{status: "active"})
 
-   
-     socket=
-     socket
-     |> put_flash(:info, "User Activated  Successfully!")
-     |> push_redirect(to: "/root/users")
-     {:noreply, socket}
+    socket =
+      socket
+      |> put_flash(:info, "User Activated  Successfully!")
+      |> push_redirect(to: "/root/users")
+
+    {:noreply, socket}
   end
 
   def handle_event("Deactivate", %{"id" => id}, socket) do
-
     user = Repo.get(User, id)
     Accounts.soft_delete(user, %{status: "inActive"})
 
-    
-     socket= 
-     socket
-     |> put_flash(:info, "#{user.first_name} has been De-Activated.")
-    |> push_redirect(to: "/root/users")
+    socket =
+      socket
+      |> put_flash(:info, "#{user.first_name} has been De-Activated.")
+      |> push_redirect(to: "/root/users")
 
     {:noreply, socket}
-
-
-
   end
 
   def handle_event("user_bets", %{"id" => id}, socket) do
@@ -165,5 +209,20 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
     {:noreply,
      socket
      |> redirect(to: "/root/users-bets/#{id}")}
+  end
+
+
+  def handle_event("delete_permission", %{"user_id" => user_id, "permission_id" => permission_id}, socket) do
+    # Implement deletion logic here
+    # Example: Repo.delete!(UserPermission, permission_id)
+
+    # After deletion, update the user's permissions in the socket assigns
+    updated_permissions = fetch_permissions(user_id)
+    {:noreply, assign(socket, permissions: updated_permissions)}
+  end
+
+  defp fetch_permissions(user_id) do
+    # Fetch and return the user's permissions from the database
+    # Example: Repo.all(from p in Permission, join: up in UserPermission, on: up.permission_id == p.id, where: up.user_id == ^user_id)
   end
 end

@@ -64,11 +64,41 @@ defmodule SwiftBet.Games do
     Repo.delete(game)
   end
 
+def check_won(user_id) do
+  from(b in Bets,
+    where: b.user_id == ^user_id and b.status == "win",
+    select: b
+  )
+  |> Repo.all()
+
+end
+
+def get_winning_bet_stake(user_id) do
+  winning_bet =
+    from(b in Bets,
+      where: b.user_id == ^user_id and b.status == "win",
+      select: b.stake,
+      limit: 1
+    )
+    |> Repo.one()
+
+  # case winning_bet do
+  #   nil ->
+  #     {:error, "No winning bet found for user #{user_id}"}
+
+  #   bet ->
+  #     {:ok, bet.stake}
+  # end
+end
+
+    
   def change_bet_status_to_lose() do
+    current_time = Timex.now()
+
     bets_to_update =
       from(b in Bets,
-        where: b.status == "open",
-        select: b.id
+      where: b.status == "open" and b.inserted_at >= ^Timex.shift(current_time, minutes: -1),
+      select: b.id
       )
       |> Repo.all()
 
@@ -82,8 +112,11 @@ defmodule SwiftBet.Games do
           "win" -> "win"
         end
 
+        away_out_come = Enum.random(1..6)
+        home_out_come = Enum.random(1..6)
+
       bet
-      |> change(status: new_status)
+      |> change(status: new_status, away_out_come: away_out_come, home_out_come: home_out_come)
       |> Repo.update()
       |> case do
         {:ok, bet} ->
@@ -103,4 +136,10 @@ defmodule SwiftBet.Games do
       end
     end)
   end
+
+
+
+ 
+
+  
 end

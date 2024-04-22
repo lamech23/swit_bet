@@ -14,6 +14,8 @@ defmodule SwiftBet.Repo.Migrations.CreateTeams do
       add :total_payout, :string
       add :selected, :string
       add :status, :string, default: "open"
+      add :home_out_come, :integer, default: 0
+      add :away_out_come, :integer, default: 0
       add :time, :utc_datetime
       add :user_id, references(:users)
 

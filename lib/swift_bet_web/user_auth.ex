@@ -151,8 +151,11 @@ defmodule SwiftBetWeb.UserAuth do
     user = socket.assigns.current_user
 
     case user do
-      %{role: %{name: "admin "}} ->
+      %{role: %{name: "admin"}} ->
         {:cont, socket}
+
+        %{role: %{name: "super-admin"}} ->
+          {:cont, socket}
 
       _other ->
         {:halt,

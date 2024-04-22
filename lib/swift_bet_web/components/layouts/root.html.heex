@@ -82,7 +82,7 @@
       </li>
 
 
-      <%= if  @current_user.role.name =="admin " do %>
+      <%= if  @current_user.role.name =="admin"  || @current_user.role.name =="super-admin"  do %>
       <li>
    <.link
    href={~p"/root/analytics"}
@@ -94,6 +94,7 @@
  <% else %>
  <% end %>
      
+
 
      
       
@@ -123,17 +124,6 @@
     </ul>
 
 
-    <nav class="flex flex-row justify-around mb-10 p-2 mt-10">
-      <span class="text-2xl font-bold text-gray-600 border-b-4 border-indigo-500">Home</span>
-      <span class="text-2xl font-bold text-gray-600">Live(65)</span>
-      <span class="text-2xl font-bold text-gray-600">Jackpots</span>
-      <span class="text-2xl font-bold text-gray-600">Ligi</span>
-      <span class="text-2xl font-bold text-gray-600 relative">Swift Fast</span>
-      <span class="text-2xl font-bold text-gray-600">Crash Games</span>
-      <span class="text-2xl font-bold text-gray-600">Virtuals</span>
-      <span class="text-2xl font-bold text-gray-600">Casino</span>
-      <span class="text-2xl font-bold text-gray-600">Live Score</span>
-    </nav>
 
       <.flash_group flash={@flash} />
       <%= @inner_content %>

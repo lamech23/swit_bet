@@ -5,12 +5,16 @@ defmodule SwiftBetWeb.Home.HomeLive do
   alias SwiftBet.Repo
   alias SwiftBet.Placed
   alias SwiftBet.Accounts
+  use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :nav}
 
-  def mount(_params, _session, socket) do
+
+  def mount(_params, session, socket) do
+
+    session |> IO.inspect
     changeset = Games.change_games(%Games{})
     socket = assign(socket, :form, to_form(changeset))
 
-    socket.assigns.current_user
+    user = socket.assigns.current_user.id
 
     all_games =
       Games.list_games()
@@ -24,13 +28,26 @@ defmodule SwiftBetWeb.Home.HomeLive do
     selected_items = []
     total_odds = 0.0
     stake = Map.get(socket.assigns, :stake, 0) |> Integer.to_string()
+    
+
+   revenue =  Games.check_won(user)
+   |> IO.inspect()
+
+
+   |> Enum.map(&String.to_float(&1.total_payout))
+   |> Enum.sum()
+
+
+   Games.get_winning_bet_stake(user) 
+   |> IO.inspect()
 
     {:ok,
      assign(socket,
        games: all_games,
        selected_items: selected_items,
        total_odds: total_odds,
-       stake: stake
+       stake: stake,
+       revenue: revenue
      )}
   end
 
@@ -157,7 +174,10 @@ defmodule SwiftBetWeb.Home.HomeLive do
 
   def handle_event("save_bets", _params, socket) do
     items = socket.assigns.selected_items
-    stake = socket.assigns.stake
+    stake = socket.assigns.stake |> IO.inspect()
+    session = Map.put(socket.assigns, :stake, stake)
+
+    
     odds_list=  socket.assigns.total_odds
 
     bets =
@@ -189,7 +209,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
           |> put_flash(:info, "Bets placed")
           |> assign(selected_items: [])
 
-        {:noreply, socket}
+        {:noreply, assign(socket, session: session)}
 
       {:error, reason} ->
         socket =

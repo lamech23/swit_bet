@@ -5,7 +5,6 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
   alias SwiftBet.Accounts.User
   use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :admin}
 
-
   def render(assigns) do
     ~H"""
     <div class="mx-auto w-1/2  border p-4  rounded shadow shadow-2xl shadow-indigio-300 ">
@@ -14,8 +13,8 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
       </.header>
 
       <.simple_form
-        for={@changeset}
         :let={f}
+        for={@changeset}
         id="registration_form"
         phx-submit="save"
         phx-change="validate"
@@ -27,45 +26,38 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
           Oops, something went wrong! Please check the errors below.
         </.error>
         <%= if @live_action == :edit do %>
-        <.input field={f[:first_name]} type="text" label="First Name" disabled />
+          <.input field={f[:first_name]} type="text" label="First Name" disabled />
         <% else %>
-        <.input field={f[:first_name]} type="text" label="First Name" />
-
-        <% end %>
-
-
-        <%= if @live_action == :edit do %>
-        <.input field={f[:last_name]} type="text" label="Last Name" disabled  />
-        <% else %>
-        <.input field={f[:last_name]} type="text" label="Last Name"  />
-
+          <.input field={f[:first_name]} type="text" label="First Name" />
         <% end %>
 
         <%= if @live_action == :edit do %>
-        <.input field={f[:email]} type="email" label="Email" required disabled />
+          <.input field={f[:last_name]} type="text" label="Last Name" disabled />
         <% else %>
-        <.input field={f[:email]} type="email" label="Email" required  />
-
+          <.input field={f[:last_name]} type="text" label="Last Name" />
         <% end %>
 
+        <%= if @live_action == :edit do %>
+          <.input field={f[:email]} type="email" label="Email" required disabled />
+        <% else %>
+          <.input field={f[:email]} type="email" label="Email" required />
+        <% end %>
 
         <%= if @live_action == :edit do %>
-        <.input field={f[:msisdn]} type="text" label="Msisdn" disabled />
+          <.input field={f[:msisdn]} type="text" label="Msisdn" disabled />
         <% else %>
-        <.input field={f[:msisdn]} type="text" label="Msisdn" />
-
+          <.input field={f[:msisdn]} type="text" label="Msisdn" />
         <% end %>
         <.input
           field={f[:role_id]}
           type="select"
           label="Role"
-          options={Enum.map(@role, &{ &1.name, &1.id})}
+          options={Enum.map(@role, &{&1.name, &1.id})}
         />
         <%= if @live_action == :edit do %>
         <% else %>
-        <.input field={f[:password]} type="password" label="Password" required />
+          <.input field={f[:password]} type="password" label="Password" required />
         <% end %>
-
 
         <:actions>
           <.button phx-disable-with="Creating account..." class="w-full">Create an account</.button>
@@ -76,11 +68,11 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
   end
 
   def mount(_params, _session, socket) do
-    socket.assigns|> IO.inspect()
     changeset = Accounts.change_user_registration(%User{})
     roles = Roles.roles()
 
-    
+
+
 
     socket =
       socket
@@ -90,59 +82,50 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
     {:ok, socket, temporary_assigns: [form: nil]}
   end
 
-
   def handle_params(params, _uri, socket) do
-
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  
-
   def handle_event("save", user_params, socket) do
     save_user(socket, socket.assigns.live_action, user_params)
-
   end
 
-  defp save_user(socket, :new,  %{"user" => user_params} ) do
+  defp save_user(socket, :new, %{"user" => user_params}) do
     case Accounts.register_user(user_params) do
       {:ok, user} ->
-        {:ok, _} =
-          Accounts.deliver_user_confirmation_instructions(
-            user,
-            &url(~p"/users/confirm/#{&1}")
-          )
-
         changeset = Accounts.change_user_registration(user)
-        {:noreply, socket |> assign(trigger_submit: true) |> assign_form(changeset)}
+        socket = 
+
+        socket 
+        |> put_flash(:info, "user created") 
+        {:noreply, 
+     
+         assign(socket, changeset: changeset)}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, socket |> assign(check_errors: true) |> assign_form(changeset)}
+        {:noreply,  assign(socket, changeset: changeset)}
     end
   end
 
-  defp save_user(socket, :edit,  %{"user" => user_params}) do
+  defp save_user(socket, :edit, %{"user" => user_params}) do
+    id = socket.assigns.id |> String.to_integer()
+    user = Accounts.get_user!(id)
 
-   id = socket.assigns.id |> String.to_integer()
-  user = Accounts.get_user!(id )
-
-  
     case Accounts.update(user, user_params) do
       {:ok, user} ->
-        socket = 
-        socket 
-        |> put_flash(:info,  " updated ")
-        {:noreply, socket }
+        socket =
+          socket
+          |> put_flash(:info, " updated ")
+
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, socket }
+        {:noreply, socket}
     end
   end
-
-
 
   defp apply_action(socket, :new, _params) do
     changeset = Accounts.change_user_registration(%User{})
-    
 
     socket
     |> assign(:page_title, "Create User")
@@ -152,20 +135,16 @@ defmodule SwiftBetWeb.Admin.CreateAdminLive do
   end
 
   defp apply_action(socket, :edit, %{"id" => id}) do
-    changeset = Accounts.get_user!(id)
-    |> Accounts.change_user_registration()
+    changeset =
+      Accounts.get_user!(id)
+      |> Accounts.change_user_registration()
 
     socket
     |> assign(:page_title, "Update   ")
     |> assign(:desc_title, "Update  User ")
     |> assign(:id, id)
     |> assign(:changeset, changeset)
-    
   end
-
-
-
-
 
   def handle_event("validate", %{"user" => user_params}, socket) do
     changeset = Accounts.change_user_registration(%User{}, user_params)

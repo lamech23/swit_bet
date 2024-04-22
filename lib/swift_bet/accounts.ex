@@ -232,7 +232,7 @@ list_users
   def get_user_by_session_token(token) do
     {:ok, query} = UserToken.verify_session_token_query(token)
     Repo.one(query)
-    |> Repo.preload(:role)
+    |> Repo.preload(role: [role_permisions: [:permission] ])
   end
 
   @doc """
@@ -356,7 +356,8 @@ list_users
     query =
       from w in User,
       order_by: [asc: :inserted_at],
-      preload: [:role]
+      preload: [role: [role_permisions: [:permission]]]
+
   
     Repo.all(query)
   end

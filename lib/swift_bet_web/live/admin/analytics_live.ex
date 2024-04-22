@@ -157,6 +157,7 @@ defmodule SwiftBetWeb.Admin.AnalyticsLive do
   def mount(_session, _params, socket) do
     profit = Bets.lost_bets()
     lose = Bets.won_bets()
+    |> IO.inspect(label: "lose")
 
     all_bets =
       Bets.all_bets()
@@ -185,7 +186,6 @@ defmodule SwiftBetWeb.Admin.AnalyticsLive do
       Bets.all_bets()
       |> Enum.filter(fn x -> x.status == "canceled" end)
       |> Enum.count()
-      |> IO.inspect()
 
     {:ok,
      assign(socket,
