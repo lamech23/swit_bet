@@ -70,7 +70,6 @@ defmodule SwiftBetWeb.Roles.RoleCreateLive do
   def mount(_params, _session, socket) do
     changeset = Roles.change_role(%Roles{})
     permission = Permissions.permissions()
-   |> IO.inspect
     roles = Roles.roles()
 
     socket = assign(socket, :form, to_form(changeset))

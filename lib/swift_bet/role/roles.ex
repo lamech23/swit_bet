@@ -12,7 +12,7 @@ defmodule SwiftBet.Role.Roles do
   schema "roles" do
     field :name, :string
     field :permission, {:array, :integer}, default: []
-    field(:permission_ids,  {:array, :integer}, virtual: true)
+    # field(:permission_ids,  {:array, :integer}, virtual: true)
     has_many :role_permisions, RolePermissions, foreign_key: :role_id
     has_many :permissions, RolePermissions
     timestamps(type: :utc_datetime)
@@ -21,24 +21,15 @@ defmodule SwiftBet.Role.Roles do
   @doc false
   def changeset(roles, attrs) do
     roles
-    |> cast(attrs, [:name, :permission_ids, :permission])
-    |> handle_permission_ids(attrs)
+    |> cast(attrs, [:name,  :permission])
+    # |> handle_permission_ids(attrs)
     |> cast_assoc(:role_permisions)
-    |> validate_required([:name, :permission, :permission_ids])
+    |> validate_required([:name, :permission])
     |>  unique_constraint(:name, message: "duplicate not allowed")
    
 
   end
 
-defp handle_permission_ids(changeset, _attrs) do
-  changeset |> IO.inspect(label: "handle permission ids")
-  case changeset do
-    %Ecto.Changeset{valid?: true, changes: %{permissions: permissions}} ->
-      put_change(changeset, :permissions, permissions)
-    _ ->
-      changeset
-  end
-end
 
   
 
@@ -49,11 +40,9 @@ end
 
   end 
 
-  # @spec update(t, Map.t()) :: {:ok, t} | {:error, Ecto.Changeset.t()}
   def update(roles, params) do
     roles
     |> changeset(params)
-    |> IO.inspect(label: "CHANGESET")
     |> Repo.update()
   end
 
@@ -61,16 +50,16 @@ end
   def get_role!(id) do
     Repo.get!(__MODULE__, id)
     |> Repo.preload(role_permisions: [:permission])
-    |> combine_role_and_permissions()
+    # |> combine_role_and_permissions()
 
 
   end
 
 
-  defp combine_role_and_permissions(role) do
-    permissions = Enum.map(role.role_permisions, &(&1.permission.id))
-    %{role | permission_ids: permissions}
-  end
+  # defp combine_role_and_permissions(role) do
+  #   permissions = Enum.map(role.role_permisions, &(&1.permission.id))
+  #   %{role | permission_ids: permissions}
+  # end
 
 
 

@@ -137,7 +137,6 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
       |> Enum.map(fn item ->
         item.permission
       end)
-      |> IO.inspect(label: "Super-User")
 
       |> Enum.any?(fn item ->
         item.name == "super-user"
