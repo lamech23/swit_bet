@@ -1,22 +1,7 @@
-<div class="flex justify-end px-20  items-center mb-2">
-
-  <button @click="isOpen = !isOpen" class="text-white font-bold py-2 px-4 rounded ml-4">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAsTAAALEwEAmpwYAAAEuElEQVR4nO2bTWwbRRTHLThxLVc4IcEFCYkTJy7xjp3M5MN4xh/5sFPbJU6T+KOx4zbZOCBVQq16ACEhpAg1fLUqCRUqSkDILShFKqqgagTNB0mUJiVpnYSkicH9Ejy0RrbHahI760prr/dJ/4Mte+z323kz+96b1ek000yz3ayqoeFZAdMehOmPCNM7iDAoBQmYPUCYLSLChgVM2cDAwFO6J20CoW0Is02lnS0QyATClleeoPPslNJO7VuYJfTEXFW08wizN/mBXW1+GPv2IqysrEIy+RDu3XukuBKJ+zA3vwRDn56DeubgIWwajdYX5DuP2AFE2N30gG8dPwVbW0nFHd5Lc/O3gDV6+HD4qpirH+GvfKk7n9b1iUkw1FoyEKqqrS/KAiAQNp4e5OvR2J4/ur2dhD+W47Bwc1lRxeN/pkKz/+0TXCjQbrkAVtODLC6tPOb0nfg6fDR0BtzegPKLHqdaczNYmg/xa8GgPACY/pMeZH19K8f52KXLYLK2Ku5sIRIwPScLAOIGmZqezzgvhQMfY2lZWxzgcLsUFbU377QlJoUay+tFAfhw8JOU89MzC1DTYM+8b3e2wtjou7C+OgL3/7pQElq9PQwjIydzYWC6ZjSanpMNAJsa4cbkLPQNvJN5z+l2QXzlC8Ud3k23Fs5Ai+sgPxNOywaACAOzzQXGOmvm9a8TpxV3Mp+mJz8GY10mXB9J9zayASBO0tSPxd4vC3m82R1BwNQmC0DNDoteOUqPWa8sAJc7fNDBdlhhy0xSYicLwFywO6VL7V3wnsMDEZsTgjYnhOytJSm/1Ql2U3a3yooOFQVgjtNqpBcSYrSk9UswDJ2WbIYo3dwZsEVfMQASYhQ2+/qhr8nFQWC/FVQ1QioBICl+TATaYMv4U9AsQCoCIOkDl3d/iyFSGYBYV5BfEM9XHICfAt38DPheA5DPkDYDmBYCSFsDmLYIIm0XYGW5Da71ijAVjsD1Iz0pnff6+Jzg6muMPaPKXeBqMJTKCKvz1zDu7tk/RGUI4LO2TjDspz6A2ZRqAHzXmdugkUr3DncHtPt6HhP3uX9VAWBLjELTG42Z/xsI96daZbu18njfVAHg52Aop3q9tra5Zy9TdQAuHPYD38bP10FWHYAxLv6P9h+vPADT4UhOF+v32cXKApAQo9BldWb+r93phR/Gr8DGxnblAJjo7gGSbYMVKPpQNQASYhTGfd1gqs8WP/MKs4uqApAQo7B8tA8GPe3gZS2pSrCp3ppSHdfYTR2uJHQU1VufVx2AxC7SaoIBrSgKWlWYaGVx0PoCRGuMQEGdIYE7KDmrgm3wij9U2A1Q2vinQq75gmUP4JuObMYoYPa5bj+Hpc96vGUP4ISDOy1GqJgXACIslP7CQXMjzASOlC2AufCxnERJwJaX8wNA7IBA6Eb6S6K9FWYC5QdgMdILHsofm2VjukJNT6iHzwnc5iYYPnQYbviDJQ/gZqQXzrZ1AuPONguEbhnq2EsFA5AMYXZyp1RSyq7SmVapqXaHpoiA2d8CMVfr5JieUA8fDuUm6WSYgVhe1RVj6P+HqELS7iAQdltqKpSwww8ETJcEwr7U1zI7Y+zpopzXTDNdRdh/oZUpZ12hqC8AAAAASUVORK5CYII="
-    class="w-20 ">  </button>
-  <div class="flex flex-col  ">
-    <span class="font-bold text-xl capitalize">
-      balance
-    </span>
-    <span class="font-bold text-xl ">
-      <%= @revenue - String.to_integer(@stake) %>
-    </span>
-  </div>
-
-</div>
 
 
 
-<section class="flex flex-row  flex-grow    ">
+<section class="flex flex-row  flex-grow px-10    ">
 
   <aside  >
     <ul class="flex flex-col gap-16">
@@ -157,9 +142,6 @@
     
   </section>
 
-    
-
-
   <!-- Right Section -->
   <section  class="col-span-2 bg-white p-8 rounded-lg shadow-lg">
 
@@ -249,13 +231,11 @@
   
     <!-- Place Bet Button -->
 
-    <%= if @stake == "0" do  %>
-
-    <% else %>
+ 
     <div class="flex justify-center">
       <button  type="button" phx-click="save_bets" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-lg px-8 py-3">Place Bet</button>
     </div>
-    <% end %>
+
 
 
     <% end %>

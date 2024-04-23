@@ -56,7 +56,6 @@ defmodule SwiftBetWeb.Router do
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
-
     end
 
     post "/users/log_in", UserSessionController, :create
@@ -70,52 +69,51 @@ defmodule SwiftBetWeb.Router do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
     end
-
   end
+
+
+
   scope "/user", SwiftBetWeb do
     pipe_through [:browser]
 
     live_session :current_users,
-    on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}, {SwiftBetWeb.UserAuth, :ensure_authenticated}] do
-
-
-    live("/home",Home.HomeLive, :new)
-    live("/bet-slip",BetSlip.BettingSlipLive, :index)
-    live("/bet-history/:id",BetSlip.BetHistoryLive, :index)
-    get "/users/log_out", UserSessionController, :delete
-
-
-
-
-end
-end
-
-  
+      on_mount: [
+        {SwiftBetWeb.UserAuth, :mount_current_user},
+        {SwiftBetWeb.UserAuth, :ensure_authenticated}
+      ] do
+      live("/home", Home.HomeLive, :new)
+      live("/bet-slip", BetSlip.BettingSlipLive, :index)
+      live("/bet-history/:id", BetSlip.BetHistoryLive, :index)
+      get "/users/log_out", UserSessionController, :delete
+    end
+  end
 
   scope "/root", SwiftBetWeb do
     pipe_through [:browser]
 
-
     live_session :current_user,
-      on_mount: [{SwiftBetWeb.UserAuth, :mount_current_user}, {SwiftBetWeb.UserAuth, :ensure_authenticated}, {SwiftBetWeb.UserAuth, :admin_auth}] do
+      on_mount: [
+        {SwiftBetWeb.UserAuth, :mount_current_user},
+        {SwiftBetWeb.UserAuth, :ensure_authenticated},
+        {SwiftBetWeb.UserAuth, :admin_auth}
+      ] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
 
-      live("/add-game",Games.GameLive, :new)
-      live("/game/:id",Games.GameLive, :edit)
-      live("/user/:id",Admin.CreateAdminLive, :edit)
-      
-      live("/list",Games.GameIndexLive, :index)
-      live("/analytics",Admin.AnalyticsLive, :index)
-      live("/roles",Roles.RoleCreateLive, :new)
-      live("/role/:id/edit",Roles.RoleLive, :edit)
-      live("/roles/lists",Roles.RoleIndexLive, :index)
-      live("/roles/create",Roles.RoleLive, :new)
-      live("/create-user",Admin.CreateAdminLive, :new)
-      live("/users",Admin.ListUsersLive, :index)
-      live("/permisions",Permisions.PermisionsLive, :index)
-      live("/users-bets/:id",BetSlip.SpecificUserBetsLive, :index)
+      live("/add-game", Games.GameLive, :new)
+      live("/game/:id", Games.GameLive, :edit)
+      live("/user/:id", Admin.CreateAdminLive, :edit)
 
+      live("/list", Games.GameIndexLive, :index)
+      live("/analytics", Admin.AnalyticsLive, :index)
+      live("/roles", Roles.RoleCreateLive, :new)
+      live("/role/:id/edit", Roles.RoleLive, :edit)
+      live("/roles/lists", Roles.RoleIndexLive, :index)
+      live("/roles/create", Roles.RoleLive, :new)
+      live("/create-user", Admin.CreateAdminLive, :new)
+      live("/users", Admin.ListUsersLive, :index)
+      live("/permisions", Permisions.PermisionsLive, :index)
+      live("/users-bets/:id", BetSlip.SpecificUserBetsLive, :index)
     end
   end
 end

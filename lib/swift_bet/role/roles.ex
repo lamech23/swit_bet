@@ -35,7 +35,6 @@ defp handle_permission_ids(changeset, _attrs) do
   case changeset do
     %Ecto.Changeset{valid?: true, changes: %{permissions: permissions}} ->
       put_change(changeset, :permissions, permissions)
-      # |> IO.inspect(label: "handle_permission_ids")x
     _ ->
       changeset
   end

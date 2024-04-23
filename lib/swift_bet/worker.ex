@@ -14,7 +14,6 @@ defmodule SwiftBet.Worker do
 
     games = Games.change_bet_status_to_lose()
     Logger.info("this id from worker ")
-    Logger.info(games)
 
 
 

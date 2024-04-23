@@ -5,16 +5,26 @@ defmodule SwiftBetWeb.Home.HomeLive do
   alias SwiftBet.Repo
   alias SwiftBet.Placed
   alias SwiftBet.Accounts
+  alias SwiftBet.Stake
+  alias SwiftBet.Accounts.User
   use Phoenix.LiveView, layout: {SwiftBetWeb.Layouts, :nav}
 
 
-  def mount(_params, session, socket) do
-
-    session |> IO.inspect
+  def mount(_params, _session, socket) do
     changeset = Games.change_games(%Games{})
     socket = assign(socket, :form, to_form(changeset))
 
-    user = socket.assigns.current_user.id
+    user = socket.assigns.current_user  
+    deposits =
+    Stake.deposit(user.id)
+    |> case do
+      nil -> 0
+     0
+     _ -> 
+        Stake.deposit(user.id) |> String.to_integer()
+    end
+
+    
 
     all_games =
       Games.list_games()
@@ -28,18 +38,18 @@ defmodule SwiftBetWeb.Home.HomeLive do
     selected_items = []
     total_odds = 0.0
     stake = Map.get(socket.assigns, :stake, 0) |> Integer.to_string()
-    
 
-   revenue =  Games.check_won(user)
-   |> IO.inspect()
+    revenue =
+      Games.check_won(user.id)
+      |> Enum.map(&String.to_float(&1.total_payout))
+      |> Enum.sum()
+
+    Games.get_winning_bet_stake(user.id)
+
+  user_stake=   Bets.get_bets_for_user(user.id) 
 
 
-   |> Enum.map(&String.to_float(&1.total_payout))
-   |> Enum.sum()
 
-
-   Games.get_winning_bet_stake(user) 
-   |> IO.inspect()
 
     {:ok,
      assign(socket,
@@ -47,7 +57,10 @@ defmodule SwiftBetWeb.Home.HomeLive do
        selected_items: selected_items,
        total_odds: total_odds,
        stake: stake,
-       revenue: revenue
+       revenue: revenue,
+       deposits: deposits,
+       stakes_for_user: user_stake
+
      )}
   end
 
@@ -65,23 +78,18 @@ defmodule SwiftBetWeb.Home.HomeLive do
 
     game_odds = socket.assigns.games |> Enum.find(&(&1.id == odds))
 
-
     if Enum.any?(socket.assigns.selected_items, &(&1.id == home_id)) do
       selected_items =
         socket.assigns.selected_items
-        |> Enum.map(fn(item) ->
+        |> Enum.map(fn item ->
           if item.id == home_id, do: %{item | selected: selection}, else: item
         end)
-        |> Enum.map(fn(item) ->
+        |> Enum.map(fn item ->
           if item.id == home_id, do: %{item | selected: selection}, else: item
         end)
 
-
-    
       {:noreply, assign(socket, selected_items: selected_items)}
-    
     else
-
       # Checking if the :odds key is present in the selected item, if not, initialize it with an empty map
       item = Map.update(item, :odds, [], & &1)
 
@@ -94,11 +102,11 @@ defmodule SwiftBetWeb.Home.HomeLive do
       # Retrieve the list of selected items from the socket assigns or initialize it if it doesn't exist
 
       selected_items = Map.get(socket.assigns, :selected_items)
+      |> IO.inspect()
 
       # Append the selected item with odds to the list of selected items
       new_selected_items = [item_with_odds | selected_items]
       # |> IO.inspect(label: "this nigger ")
-
 
       odds_list =
         Enum.map(new_selected_items, & &1.odds)
@@ -127,6 +135,9 @@ defmodule SwiftBetWeb.Home.HomeLive do
           }
         end)
 
+
+       
+
       selected_fields_with_stake =
         Enum.map(selected_fields, fn field ->
           stake = Map.get(field, :stake, stakes)
@@ -134,14 +145,12 @@ defmodule SwiftBetWeb.Home.HomeLive do
           Map.put(field, :stake, stake)
           Map.put(field, :selected, selection)
 
-          Map.put(  field, :total_payout,
+          Map.put(
+            field,
+            :total_payout,
             Float.to_string(Float.round(odds_list * String.to_integer(stake), 2))
           )
         end)
-
-
-
-
 
       socket =
         socket
@@ -174,20 +183,22 @@ defmodule SwiftBetWeb.Home.HomeLive do
 
   def handle_event("save_bets", _params, socket) do
     items = socket.assigns.selected_items
-    stake = socket.assigns.stake |> IO.inspect()
+    stake = socket.assigns.stake
     session = Map.put(socket.assigns, :stake, stake)
+    user = socket.assigns.current_user
 
-    
-    odds_list=  socket.assigns.total_odds
+
+    odds_list = socket.assigns.total_odds
 
     bets =
       socket.assigns.bets
       |> Enum.map(fn item ->
         item
         |> Map.put(:stake, stake)
-       |> Map.put( :total_payout,
-        Float.to_string(Float.round(odds_list * String.to_integer(stake), 2))
-      )
+        |> Map.put(
+          :total_payout,
+          Float.to_string(Float.round(odds_list * String.to_integer(stake), 2))
+        )
       end)
 
     case add_slip(bets) do
@@ -203,6 +214,30 @@ defmodule SwiftBetWeb.Home.HomeLive do
               end)
           end
         end)
+
+
+      #   deposit =socket.assigns.deposits  |>IO.inspect(label: "Deposits")
+      #  stakes =  socket.assigns.stake |>String.to_integer() |>IO.inspect(label: "Stakes")
+      # user_stake =  socket.assigns.stakes_for_user |>String.to_integer() |>IO.inspect(label: "User Stakes")
+
+  
+
+      # new_fig = deposit - stakes - user_stake 
+
+      # # Ensure the result is not negative
+      # new_fig = if new_fig < 0, do: 0, else: new_fig
+      
+      # # Convert new_fig to string
+      # new_fig_str = Integer.to_string(new_fig)
+      
+      # # Log new_fig_str to verify its value
+      # IO.inspect(new_fig_str, label: "new_fig_str")
+      
+      # # Update the stake
+      # Stake.deposits(user.id)
+      # |> Stake.update( %{name: new_fig_str})
+      # |> IO.inspect()
+
 
         socket =
           socket
@@ -230,7 +265,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
   end
 
   def handle_event("stake", %{"stake" => stake}, socket) do
-    added_stake = stake
+    added_stake = stake 
 
     if stake == 0 do
       {:noreply,
@@ -247,8 +282,7 @@ defmodule SwiftBetWeb.Home.HomeLive do
   def handle_event("check_bet_slip", _params, socket) do
     user = socket.assigns.current_user
 
-    bets =
-      Placed.get_slips(user.id)
+    bets = Placed.get_slips(user.id)
 
     case bets do
       [] ->
@@ -266,4 +300,26 @@ defmodule SwiftBetWeb.Home.HomeLive do
         {:noreply, socket}
     end
   end
+
+
+  def handle_event("save_deposit", deposit_params, socket) do
+    user = socket.assigns.current_user
+    deposit_params_with_user_id =
+    deposit_params
+    |> Map.put("user_id", user.id)
+    |> IO.inspect
+
+    case Stake.create(deposit_params_with_user_id) do
+      {:ok, _deposit} ->
+        socket =
+          socket
+          |> put_flash(:info, "Deposited")
+
+        {:noreply, socket}
+        {:error, %Ecto.Changeset{} = changeset} ->
+          {:noreply, assign(socket, changeset)}
+    end
+  end
+
+
 end

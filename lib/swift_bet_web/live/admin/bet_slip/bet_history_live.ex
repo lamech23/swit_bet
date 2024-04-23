@@ -115,10 +115,10 @@ defmodule SwiftBetWeb.BetSlip.BetHistoryLive do
       item.status
     
     end)
+
     |> Enum.uniq()  
     |> Enum.count
 
-     |> IO.inspect()
 
     bet_status =
       slip_list

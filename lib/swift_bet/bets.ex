@@ -45,6 +45,17 @@ defmodule SwiftBet.Bets do
   
   end
 
+  def get_bets_for_user(user_id) do
+    from(record in __MODULE__,
+    where: record.user_id == ^user_id,
+    order_by: [desc: record.inserted_at],
+    limit: 1,
+    select: record.stake
+  )
+  |> Repo.one()
+  
+  end
+
 
   
   def all_bets() do
