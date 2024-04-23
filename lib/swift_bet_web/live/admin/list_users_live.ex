@@ -54,21 +54,7 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
                   <% end %>
                 </td>
 
-                <td class="px-4 py-2">
-                  <div class="flex flex-row flex-wrap gap-2">
-                    <%= user.role.role_permisions
-                    |> Enum.map(fn item -> item.permission.name end)
-                    |> Enum.map(fn name ->
-                      "<div class='flex flex-col  items-center'>
-        <span class='text-gray-900 text-lg '>" <> name <> "</span>
-
-        <span class=' material-symbols-outlined text-xs text-rose-500 ml-2 cursor-pointer' phx-click='delete_permission' phx-value-user_id='{user.id}' phx-value-permission_id={item.id}>Delete</span>
-      </div>"
-                    end)
-                    |> Enum.join("")
-                    |> raw %>
-                  </div>
-                </td>
+               
 
                 <td class="px-4 py-2">
                   <%= if @super_user == true do %>
@@ -151,16 +137,17 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
       |> Enum.map(fn item ->
         item.permission
       end)
+      |> IO.inspect(label: "Super-User")
+
       |> Enum.any?(fn item ->
-        item === "super-user"
+        item.name == "super-user"
       end)
-      |> IO.inspect(label: "Super User")
+      |> IO.inspect(label: "Super-User")
 
     {:ok, assign(socket, users: users, super_user: super_user)}
   end
 
   def handle_event("check_permisions", %{"id" => id}, socket) do
-    id |> IO.inspect(label: "User ID")
 
     {:noreply, socket}
   end
@@ -212,17 +199,5 @@ defmodule SwiftBetWeb.Admin.ListUsersLive do
   end
 
 
-  def handle_event("delete_permission", %{"user_id" => user_id, "permission_id" => permission_id}, socket) do
-    # Implement deletion logic here
-    # Example: Repo.delete!(UserPermission, permission_id)
-
-    # After deletion, update the user's permissions in the socket assigns
-    updated_permissions = fetch_permissions(user_id)
-    {:noreply, assign(socket, permissions: updated_permissions)}
-  end
-
-  defp fetch_permissions(user_id) do
-    # Fetch and return the user's permissions from the database
-    # Example: Repo.all(from p in Permission, join: up in UserPermission, on: up.permission_id == p.id, where: up.user_id == ^user_id)
-  end
+ 
 end
